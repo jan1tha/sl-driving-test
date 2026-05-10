@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sri Lanka Driving Licence Practice Test</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #006400 0%, #004d00 50%, #003300 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 760px;
+      overflow: hidden;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #8B0000, #B22222);
+      padding: 24px 32px;
+      text-align: center;
+      color: white;
+    }
+    .header .flag {
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .header p {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
+
+    /* SCREENS */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* WELCOME SCREEN */
+    #welcomeScreen .content {
+      padding: 40px 40px 36px;
+      text-align: center;
+    }
+    #welcomeScreen h2 {
+      font-size: 24px;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+    #welcomeScreen p {
+      color: #555;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .info-cards {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .info-card {
+      background: #f7f9fc;
+      border: 1px solid #e0e7ef;
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: center;
+      min-width: 130px;
+    }
+    .info-card .num {
+      font-size: 28px;
+      font-weight: 800;
+      color: #8B0000;
+    }
+    .info-card .label {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .input-group {
+      max-width: 380px;
+      margin: 0 auto 24px;
+      text-align: left;
+    }
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #333;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .input-group input:focus { border-color: #8B0000; }
+    .input-group input.error { border-color: #e74c3c; }
+
+    .error-msg {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 36px;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #8B0000, #B22222);
+      color: white;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,0,0,0.35); }
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+    .btn-secondary:hover { background: #e0e0e0; }
+    .btn-success {
+      background: linear-gradient(135deg, #006400, #228B22);
+      color: white;
+    }
+    .btn-success:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,100,0,0.35); }
+
+    /* QUIZ SCREEN */
+    #quizScreen .quiz-header {
+      padding: 20px 32px 16px;
+      background: #f9f9f9;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .quiz-info .greeting {
+      font-size: 14px;
+      color: #666;
+    }
+    .quiz-info .q-counter {
+      font-size: 20px;
+      font-weight: 800;
+      color: #8B0000;
+    }
+    .progress-wrap {
+      flex: 1;
+      max-width: 320px;
+    }
+    .progress-bar-bg {
+      background: #e0e0e0;
+      border-radius: 6px;
+      height: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #8B0000, #B22222);
+      border-radius: 6px;
+      transition: width 0.4s ease;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: #888;
+      text-align: right;
+      margin-top: 4px;
+    }
+    .category-badge {
+      display: inline-block;
+      background: #e8f4e8;
+      color: #006400;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid #c0e0c0;
+    }
+
+    .quiz-body {
+      padding: 28px 32px 24px;
+    }
+    .question-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .sign-container {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      margin: 14px 0 22px;
+      padding: 18px;
+      background: #f4f4f4;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+    .sign-container svg { max-height: 170px; max-width: 100%; }
+
+    .options-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin-bottom: 28px;
+    }
+    .option-item {
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 14px 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.15s;
+      font-size: 15px;
+      color: #333;
+    }
+    .option-item:hover:not(.locked) {
+      border-color: #8B0000;
+      background: #fff5f5;
+    }
+    .option-item.selected {
+      border-color: #8B0000;
+      background: #fff5f5;
+    }
+    .option-item.correct {
+      border-color: #22a22a;
+      background: #eafaea;
+      color: #155a15;
+    }
+    .option-item.wrong {
+      border-color: #e74c3c;
+      background: #fff0f0;
+      color: #b22222;
+    }
+    .option-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .option-item.selected .option-letter { background: #8B0000; color: white; }
+    .option-item.correct .option-letter { background: #22a22a; color: white; }
+    .option-item.wrong .option-letter { background: #e74c3c; color: white; }
+
+    .feedback-box {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      display: none;
+      line-height: 1.5;
+    }
+    .feedback-box.correct {
+      background: #eafaea;
+      color: #155a15;
+      border: 1px solid #b2e2b2;
+    }
+    .feedback-box.wrong {
+      background: #fff0f0;
+      color: #8B0000;
+      border: 1px solid #f4baba;
+    }
+
+    .quiz-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* RESULTS SCREEN */
+    #resultsScreen .content {
+      padding: 36px 40px 40px;
+      text-align: center;
+    }
+    .result-icon {
+      font-size: 64px;
+      margin-bottom: 12px;
+    }
+    #resultsScreen h2 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .result-name {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 28px;
+    }
+
+    .score-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      border: 8px solid;
+    }
+    .score-circle.pass { border-color: #22a22a; background: #eafaea; }
+    .score-circle.fail { border-color: #e74c3c; background: #fff0f0; }
+    .score-circle .big-num {
+      font-size: 40px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .score-circle.pass .big-num { color: #155a15; }
+    .score-circle.fail .big-num { color: #8B0000; }
+    .score-circle .out-of {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .stat-box {
+      background: #f7f9fc;
+      border: 1px solid #e0e7ef;
+      border-radius: 10px;
+      padding: 14px 24px;
+      text-align: center;
+    }
+    .stat-box .stat-num {
+      font-size: 26px;
+      font-weight: 800;
+    }
+    .stat-box .stat-num.green { color: #22a22a; }
+    .stat-box .stat-num.red { color: #e74c3c; }
+    .stat-box .stat-lbl { font-size: 12px; color: #888; margin-top: 2px; }
+
+    .pass-msg {
+      font-size: 16px;
+      margin-bottom: 28px;
+      padding: 16px 20px;
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+    .pass-msg.pass { background: #eafaea; color: #155a15; border: 1px solid #b2e2b2; }
+    .pass-msg.fail { background: #fff0f0; color: #8B0000; border: 1px solid #f4baba; }
+
+    /* REVIEW TABLE */
+    .review-toggle {
+      font-size: 14px;
+      color: #8B0000;
+      cursor: pointer;
+      text-decoration: underline;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+    .review-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+      margin-bottom: 28px;
+      display: none;
+    }
+    .review-table th {
+      background: #f0f0f0;
+      padding: 10px 12px;
+      font-weight: 700;
+      color: #333;
+      border-bottom: 2px solid #ddd;
+    }
+    .review-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: top;
+    }
+    .review-table tr:nth-child(even) td { background: #fafafa; }
+    .review-table tr.wrong td { background: #fff8f8; }
+    .tick { color: #22a22a; font-weight: 700; }
+    .cross { color: #e74c3c; font-weight: 700; }
+
+    .result-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+      .header h1 { font-size: 17px; }
+      #welcomeScreen .content, #resultsScreen .content { padding: 28px 20px; }
+      .quiz-body { padding: 20px 18px 18px; }
+      .quiz-header { padding: 16px 18px 12px; }
+      .question-text { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="flag">🇱🇰</div>
+    <h1>Sri Lanka Driving Licence Practice Test</h1>
+    <p>Department of Motor Traffic — Written Examination Preparation</p>
+  </div>
+
+  <!-- WELCOME SCREEN -->
+  <div id="welcomeScreen" class="screen active">
+    <div class="content">
+      <h2>Welcome to the Practice Test</h2>
+      <p>Prepare for the Sri Lanka Department of Motor Traffic written examination with our question bank based on official topics.</p>
+
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="num">40</div>
+          <div class="label">Questions</div>
+        </div>
+        <div class="info-card">
+          <div class="num">80%</div>
+          <div class="label">To Pass</div>
+        </div>
+        <div class="info-card">
+          <div class="num">Random</div>
+          <div class="label">Each Session</div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="nameInput">Your Full Name</label>
+        <input type="text" id="nameInput" placeholder="e.g. Kamal Perera" autocomplete="name" />
+        <div class="error-msg" id="nameError">Please enter your name to continue.</div>
+      </div>
+
+      <button class="btn btn-primary" onclick="startTest()">Start Test &rarr;</button>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quizScreen" class="screen">
+    <div class="quiz-header">
+      <div class="quiz-info">
+        <div class="greeting" id="quizGreeting"></div>
+        <div class="q-counter" id="qCounter"></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-label" id="progressLabel"></div>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div><span class="category-badge" id="categoryBadge"></span></div>
+      <p class="question-text" id="questionText"></p>
+      <div class="sign-container" id="signContainer"></div>
+      <ul class="options-list" id="optionsList"></ul>
+      <div class="feedback-box" id="feedbackBox"></div>
+      <div class="quiz-footer">
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="resultsScreen" class="screen">
+    <div class="content">
+      <div class="result-icon" id="resultIcon"></div>
+      <h2 id="resultHeading"></h2>
+      <div class="result-name" id="resultName"></div>
+
+      <div class="score-circle" id="scoreCircle">
+        <span class="big-num" id="scoreBig"></span>
+        <span class="out-of">out of 40</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-num green" id="correctCount"></div>
+          <div class="stat-lbl">Correct</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num red" id="wrongCount"></div>
+          <div class="stat-lbl">Wrong</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="percentScore" style="color:#8B0000"></div>
+          <div class="stat-lbl">Score %</div>
+        </div>
+      </div>
+
+      <div class="pass-msg" id="passMsg"></div>
+
+      <span class="review-toggle" onclick="toggleReview()">&#9660; Show Question Review</span>
+      <table class="review-table" id="reviewTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Question</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+          </tr>
+        </thead>
+        <tbody id="reviewBody"></tbody>
+      </table>
+
+      <div class="result-actions">
+        <button class="btn btn-secondary" onclick="goHome()">&#8592; Back to Home</button>
+        <button class="btn btn-success" onclick="retakeTest()">&#8635; Try Again</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ================================================================
+// SIGN / MARKING SVGs
+// ================================================================
+const S = {
+  noEntry:      `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="56" fill="#CC0000"/><rect x="20" y="50" width="80" height="20" rx="3" fill="white"/></svg>`,
+  warningDmd:   `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><polygon points="60,5 115,60 60,115 5,60" fill="#FFC000" stroke="#333" stroke-width="3"/><text x="60" y="80" text-anchor="middle" font-family="Arial,sans-serif" font-size="52" font-weight="bold" fill="#333">!</text></svg>`,
+  blueCircle:   `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="56" fill="#0060B0"/><rect x="53" y="30" width="14" height="42" fill="white"/><polygon points="60,16 40,44 80,44" fill="white"/></svg>`,
+  triWarning:   `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><polygon points="60,6 114,106 6,106" fill="white" stroke="#CC0000" stroke-width="8"/><text x="60" y="98" text-anchor="middle" font-family="Arial,sans-serif" font-size="62" font-weight="bold" fill="#333">!</text></svg>`,
+  speedLimit:   `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="56" fill="white" stroke="#CC0000" stroke-width="11"/><text x="60" y="82" text-anchor="middle" font-family="Arial,sans-serif" font-size="54" font-weight="bold" fill="#222">50</text></svg>`,
+  giveWay:      `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><polygon points="6,14 114,14 60,110" fill="white" stroke="#CC0000" stroke-width="7"/><text x="60" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="11.5" font-weight="bold" fill="#CC0000">GIVE</text><text x="60" y="76" text-anchor="middle" font-family="Arial,sans-serif" font-size="11.5" font-weight="bold" fill="#CC0000">WAY</text></svg>`,
+  stopSign:     `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><polygon points="36,4 84,4 116,36 116,84 84,116 36,116 4,84 4,36" fill="#CC0000"/><text x="60" y="72" text-anchor="middle" font-family="Arial,sans-serif" font-size="27" font-weight="900" fill="white">STOP</text></svg>`,
+  prohibit:     `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="54" fill="white" stroke="#CC0000" stroke-width="9"/><line x1="22" y1="22" x2="98" y2="98" stroke="#CC0000" stroke-width="9"/></svg>`,
+  pedestrian:   `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><polygon points="60,5 115,60 60,115 5,60" fill="#FFC000" stroke="#333" stroke-width="3"/><circle cx="60" cy="32" r="8" fill="#333"/><line x1="60" y1="40" x2="60" y2="68" stroke="#333" stroke-width="5"/><line x1="42" y1="52" x2="78" y2="52" stroke="#333" stroke-width="5"/><line x1="60" y1="68" x2="46" y2="88" stroke="#333" stroke-width="5"/><line x1="60" y1="68" x2="74" y2="88" stroke="#333" stroke-width="5"/></svg>`,
+  twoWay:       `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><polygon points="60,5 115,60 60,115 5,60" fill="#FFC000" stroke="#333" stroke-width="3"/><rect x="43" y="52" width="10" height="32" fill="#333"/><polygon points="48,22 36,54 60,54" fill="#333"/><rect x="67" y="36" width="10" height="32" fill="#333"/><polygon points="72,98 60,66 84,66" fill="#333"/></svg>`,
+  noMoto:       `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="54" fill="white" stroke="#CC0000" stroke-width="9"/><circle cx="36" cy="74" r="10" fill="none" stroke="#444" stroke-width="4"/><circle cx="84" cy="74" r="10" fill="none" stroke="#444" stroke-width="4"/><path d="M36,64 L50,46 L74,46 L84,64" fill="none" stroke="#444" stroke-width="4"/><path d="M62,46 L70,58" stroke="#444" stroke-width="3"/><circle cx="64" cy="40" r="5" fill="#444"/><line x1="22" y1="22" x2="98" y2="98" stroke="#CC0000" stroke-width="9"/></svg>`,
+  infoSign:     `<svg viewBox="0 0 160 80" width="160" height="80" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="152" height="72" rx="7" fill="#0055AA"/><text x="80" y="56" text-anchor="middle" font-family="Arial,sans-serif" font-size="42" fill="white">&#x2192;</text></svg>`,
+  noUturn:      `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="54" fill="white" stroke="#CC0000" stroke-width="9"/><path d="M40,82 L40,50 C40,30 80,30 80,50 L80,65" fill="none" stroke="#333" stroke-width="6" stroke-linecap="round"/><polygon points="32,72 40,86 48,72" fill="#333"/><polygon points="72,57 80,72 88,57" fill="#333"/><line x1="22" y1="22" x2="98" y2="98" stroke="#CC0000" stroke-width="9"/></svg>`,
+  truckSlope:   `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><polygon points="60,5 115,60 60,115 5,60" fill="#FFC000" stroke="#333" stroke-width="3"/><line x1="22" y1="92" x2="96" y2="36" stroke="#555" stroke-width="2.5"/><g transform="translate(60,62) rotate(-33)"><rect x="-22" y="-14" width="42" height="18" rx="2" fill="#444"/><rect x="-14" y="-24" width="20" height="12" rx="2" fill="#555"/><circle cx="-12" cy="8" r="5" fill="#222"/><circle cx="14" cy="8" r="5" fill="#222"/></g><text x="85" y="100" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#333">10%</text></svg>`,
+  // traffic lights
+  ltRed:        `<svg viewBox="0 0 72 180" width="72" height="180" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="60" height="168" rx="10" fill="#111"/><circle cx="36" cy="40" r="22" fill="#CC0000"/><circle cx="36" cy="90" r="22" fill="#1a1a1a"/><circle cx="36" cy="140" r="22" fill="#1a1a1a"/></svg>`,
+  ltAmber:      `<svg viewBox="0 0 72 180" width="72" height="180" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="60" height="168" rx="10" fill="#111"/><circle cx="36" cy="40" r="22" fill="#1a1a1a"/><circle cx="36" cy="90" r="22" fill="#FFA500"/><circle cx="36" cy="140" r="22" fill="#1a1a1a"/></svg>`,
+  ltFlashRed:   `<svg viewBox="0 0 72 180" width="72" height="180" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="60" height="168" rx="10" fill="#111"/><circle cx="36" cy="40" r="22" fill="#CC0000"><animate attributeName="opacity" values="1;0.1;1" dur="0.9s" repeatCount="indefinite"/></circle><circle cx="36" cy="90" r="22" fill="#1a1a1a"/><circle cx="36" cy="140" r="22" fill="#1a1a1a"/></svg>`,
+  ltFlashAmber: `<svg viewBox="0 0 72 180" width="72" height="180" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="60" height="168" rx="10" fill="#111"/><circle cx="36" cy="40" r="22" fill="#1a1a1a"/><circle cx="36" cy="90" r="22" fill="#FFA500"><animate attributeName="opacity" values="1;0.1;1" dur="0.9s" repeatCount="indefinite"/></circle><circle cx="36" cy="140" r="22" fill="#1a1a1a"/></svg>`,
+  ltGrnArrow:   `<svg viewBox="0 0 72 180" width="72" height="180" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="60" height="168" rx="10" fill="#111"/><circle cx="36" cy="40" r="22" fill="#1a1a1a"/><circle cx="36" cy="90" r="22" fill="#1a1a1a"/><circle cx="36" cy="140" r="22" fill="#009900"/><text x="36" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" fill="white">&#x2192;</text></svg>`,
+  // road markings
+  mkBroken:     `<svg viewBox="0 0 220 70" width="220" height="70" xmlns="http://www.w3.org/2000/svg"><rect width="220" height="70" fill="#5a5a5a"/><line x1="0" y1="6" x2="220" y2="6" stroke="#FFCC00" stroke-width="3"/><line x1="0" y1="64" x2="220" y2="64" stroke="#FFCC00" stroke-width="3"/><line x1="8" y1="35" x2="38" y2="35" stroke="white" stroke-width="4" stroke-linecap="round"/><line x1="52" y1="35" x2="82" y2="35" stroke="white" stroke-width="4" stroke-linecap="round"/><line x1="96" y1="35" x2="126" y2="35" stroke="white" stroke-width="4" stroke-linecap="round"/><line x1="140" y1="35" x2="170" y2="35" stroke="white" stroke-width="4" stroke-linecap="round"/><line x1="184" y1="35" x2="214" y2="35" stroke="white" stroke-width="4" stroke-linecap="round"/></svg>`,
+  mkSolid:      `<svg viewBox="0 0 220 70" width="220" height="70" xmlns="http://www.w3.org/2000/svg"><rect width="220" height="70" fill="#5a5a5a"/><line x1="0" y1="6" x2="220" y2="6" stroke="#FFCC00" stroke-width="3"/><line x1="0" y1="64" x2="220" y2="64" stroke="#FFCC00" stroke-width="3"/><line x1="0" y1="35" x2="220" y2="35" stroke="white" stroke-width="4"/></svg>`,
+  mkDblYellow:  `<svg viewBox="0 0 220 70" width="220" height="70" xmlns="http://www.w3.org/2000/svg"><rect width="220" height="70" fill="#5a5a5a"/><line x1="0" y1="31" x2="220" y2="31" stroke="#FFCC00" stroke-width="4"/><line x1="0" y1="39" x2="220" y2="39" stroke="#FFCC00" stroke-width="4"/></svg>`,
+  mkZigzag:     `<svg viewBox="0 0 220 100" width="220" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="220" height="100" fill="#5a5a5a"/><rect x="0" y="38" width="220" height="24" fill="#666"/><rect x="12" y="38" width="24" height="24" fill="white"/><rect x="56" y="38" width="24" height="24" fill="white"/><rect x="100" y="38" width="24" height="24" fill="white"/><rect x="144" y="38" width="24" height="24" fill="white"/><rect x="188" y="38" width="24" height="24" fill="white"/><polyline points="4,30 14,10 24,30 34,10 44,30 54,10 64,30 74,10 84,30 94,10 104,30 114,10 124,30 134,10 144,30 154,10 164,30 174,10 184,30 194,10 204,30 214,10" fill="none" stroke="white" stroke-width="3"/></svg>`,
+  mkYellowBox:  `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" fill="#5a5a5a"/><rect x="12" y="12" width="96" height="96" fill="none" stroke="#FFCC00" stroke-width="5"/><line x1="12" y1="12" x2="108" y2="108" stroke="#FFCC00" stroke-width="3"/><line x1="108" y1="12" x2="12" y2="108" stroke="#FFCC00" stroke-width="3"/></svg>`,
+  mkArrow:      `<svg viewBox="0 0 80 160" width="80" height="160" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="160" fill="#5a5a5a"/><polygon points="40,12 22,52 32,52 32,148 48,148 48,52 58,52" fill="white"/></svg>`,
+  // railway crossing
+  railway:      `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" fill="#333" rx="8"/><line x1="20" y1="60" x2="100" y2="60" stroke="#CC0000" stroke-width="14"/><line x1="60" y1="20" x2="60" y2="100" stroke="#CC0000" stroke-width="14"/><circle cx="20" cy="60" r="14" fill="#CC0000"><animate attributeName="opacity" values="1;0.1;1" dur="0.8s" repeatCount="indefinite"/></circle><circle cx="100" cy="60" r="14" fill="#CC0000"><animate attributeName="opacity" values="0.1;1;0.1" dur="0.8s" repeatCount="indefinite"/></circle><circle cx="60" cy="20" r="14" fill="#eee"/><circle cx="60" cy="100" r="14" fill="#eee"/></svg>`,
+};
+
+// ================================================================
+// QUESTION BANK — Sri Lanka Driving Licence Practice Questions
+// ================================================================
+const QUESTIONS = [
+  // ── Traffic Signs ──
+  {
+    category: "Traffic Signs",
+    q: "What does this road sign mean?",
+    img: S.noEntry,
+    opts: ["No parking", "No entry for vehicles", "Stop ahead", "No U-turn"],
+    ans: 1
+  },
+  {
+    category: "Traffic Signs",
+    q: "What is the shape of this Sri Lankan warning road sign?",
+    img: S.warningDmd,
+    opts: ["Rectangle", "Circle", "Diamond", "Triangle"],
+    ans: 2
+  },
+  {
+    category: "Traffic Signs",
+    q: "What colour background does this warning sign use?",
+    img: S.warningDmd,
+    opts: ["Blue", "Red", "Yellow or orange", "Green"],
+    ans: 2
+  },
+  {
+    category: "Traffic Signs",
+    q: "What type of instruction does this road sign give?",
+    img: S.blueCircle,
+    opts: ["A warning", "A prohibition", "A mandatory instruction", "Route information"],
+    ans: 2
+  },
+  {
+    category: "Traffic Signs",
+    q: "What does this road sign indicate?",
+    img: S.triWarning,
+    opts: ["Stop ahead", "General hazard or danger ahead", "School zone", "Steep hill warning"],
+    ans: 1
+  },
+  {
+    category: "Traffic Signs",
+    q: "What does this road sign indicate?",
+    img: S.speedLimit,
+    opts: ["Route number", "Maximum speed limit", "Distance to destination", "Road category"],
+    ans: 1
+  },
+  {
+    category: "Traffic Signs",
+    q: "What does this road sign mean?",
+    img: S.giveWay,
+    opts: ["Stop", "Give Way", "No entry", "Slow down"],
+    ans: 1
+  },
+  {
+    category: "Traffic Signs",
+    q: "What does this road sign require you to do?",
+    img: S.stopSign,
+    opts: ["Slow down and proceed", "Come to a complete stop and give way before proceeding", "Beep horn and proceed", "Stop only if traffic is present"],
+    ans: 1
+  },
+  {
+    category: "Traffic Signs",
+    q: "What does this type of road sign generally indicate?",
+    img: S.prohibit,
+    opts: ["Mandatory action required", "Prohibited action", "Warning of something ahead", "Information only"],
+    ans: 1
+  },
+  {
+    category: "Traffic Signs",
+    q: "What does this road sign warn about?",
+    img: S.pedestrian,
+    opts: ["No pedestrians allowed", "Pedestrian crossing ahead", "School zone", "Footpath only"],
+    ans: 1
+  },
+  {
+    category: "Traffic Signs",
+    q: "What does this road sign indicate?",
+    img: S.twoWay,
+    opts: ["Roundabout ahead", "Two-way traffic ahead", "Overtaking permitted", "Merge point"],
+    ans: 1
+  },
+  {
+    category: "Traffic Signs",
+    q: "What does this road sign mean?",
+    img: S.noMoto,
+    opts: ["Motorcycles must slow down", "No motorcycles allowed", "Motorcycles only", "Motorcycle parking"],
+    ans: 1
+  },
+  {
+    category: "Traffic Signs",
+    q: "What type of road sign is this?",
+    img: S.infoSign,
+    opts: ["Warning sign", "Prohibition sign", "Information or direction sign", "Mandatory sign"],
+    ans: 2
+  },
+  {
+    category: "Traffic Signs",
+    q: "What does this road sign mean?",
+    img: S.noUturn,
+    opts: ["No left turn", "No U-turns allowed", "No entry", "No right turn"],
+    ans: 1
+  },
+  {
+    category: "Traffic Signs",
+    q: "What does this road sign indicate?",
+    img: S.truckSlope,
+    opts: ["Trucks must stop", "Steep gradient or hill ahead", "Slow vehicle lane", "Truck parking area"],
+    ans: 1
+  },
+
+  // ── Speed Limits ──
+  {
+    category: "Speed Limits",
+    q: "What is the general maximum speed limit in a built-up area in Sri Lanka?",
+    opts: ["60 km/h", "40 km/h", "50 km/h", "70 km/h"],
+    ans: 2
+  },
+  {
+    category: "Speed Limits",
+    q: "What is the general maximum speed limit on Sri Lanka's expressways?",
+    opts: ["90 km/h", "80 km/h", "110 km/h", "100 km/h"],
+    ans: 3
+  },
+  {
+    category: "Speed Limits",
+    q: "What is the general maximum speed limit on rural roads outside built-up areas in Sri Lanka?",
+    opts: ["50 km/h", "80 km/h", "70 km/h", "90 km/h"],
+    ans: 2
+  },
+  {
+    category: "Speed Limits",
+    q: "The speed limit in a school zone in Sri Lanka is typically:",
+    opts: ["30 km/h", "50 km/h", "40 km/h", "20 km/h"],
+    ans: 2
+  },
+  {
+    category: "Speed Limits",
+    q: "Which sign legally overrides the general speed limit?",
+    opts: ["A yellow warning sign", "A blue information sign", "A red circle with a number", "A green direction sign"],
+    ans: 2
+  },
+
+  // ── Road Rules ──
+  {
+    category: "Road Rules",
+    q: "In Sri Lanka, vehicles must drive on the:",
+    opts: ["Right side of the road", "Left side of the road", "Middle of the road", "Either side as preferred"],
+    ans: 1
+  },
+  {
+    category: "Road Rules",
+    q: "When approaching a roundabout, priority is given to:",
+    opts: ["Vehicles entering from the right", "Vehicles already circulating inside the roundabout", "Vehicles entering from the left", "The largest vehicle"],
+    ans: 1
+  },
+  {
+    category: "Road Rules",
+    q: "At an uncontrolled intersection, you must give way to:",
+    opts: ["Vehicles on your left", "Vehicles on your right", "The slowest vehicle", "Vehicles coming from behind"],
+    ans: 1
+  },
+  {
+    category: "Road Rules",
+    q: "When is overtaking on a solid white or yellow centre line permitted?",
+    opts: ["When no other traffic is present", "At night only", "Never", "Only on straight roads"],
+    ans: 2
+  },
+  {
+    category: "Road Rules",
+    q: "You should use your vehicle's horn to:",
+    opts: ["Greet other drivers", "Warn other road users of a hazard or your presence", "Express frustration", "Signal to a pedestrian to move"],
+    ans: 1
+  },
+  {
+    category: "Road Rules",
+    q: "When should you turn on your headlights?",
+    opts: ["Only at night", "Only in heavy rain", "From sunset to sunrise and whenever visibility is poor", "Only on unlit roads"],
+    ans: 2
+  },
+  {
+    category: "Road Rules",
+    q: "Before overtaking another vehicle, you must:",
+    opts: ["Sound horn and accelerate immediately", "Check mirrors, signal, confirm the road ahead is clear, then overtake", "Flash headlights only", "Accelerate to match speed first"],
+    ans: 1
+  },
+  {
+    category: "Road Rules",
+    q: "On a multi-lane road, the right lane is primarily for:",
+    opts: ["Slow vehicles", "Heavy trucks", "Overtaking", "Buses only"],
+    ans: 2
+  },
+  {
+    category: "Road Rules",
+    q: "When an emergency vehicle with lights and siren approaches, you must:",
+    opts: ["Speed up to clear the way quickly", "Pull over to the left and stop or slow down to let it pass", "Ignore it and maintain speed", "Stop immediately in your lane"],
+    ans: 1
+  },
+  {
+    category: "Road Rules",
+    q: "After completing an overtake, you should return to the left lane when:",
+    opts: ["After exactly 100 metres", "Immediately after passing", "When you can see the overtaken vehicle in your rear-view mirror", "The other driver flashes their lights"],
+    ans: 2
+  },
+  {
+    category: "Road Rules",
+    q: "When making a right turn on a two-lane road, you should position your vehicle:",
+    opts: ["As far left as possible", "Close to the centre line", "On the right shoulder", "In either lane"],
+    ans: 1
+  },
+
+  // ── Road Markings ──
+  {
+    category: "Road Markings",
+    q: "What does this road centre marking indicate?",
+    img: S.mkBroken,
+    opts: ["No overtaking allowed", "Lane separation — overtaking permitted when it is safe to do so", "No parking zone", "Bus lane"],
+    ans: 1
+  },
+  {
+    category: "Road Markings",
+    q: "What does this road centre marking mean?",
+    img: S.mkSolid,
+    opts: ["Overtaking is not allowed from your side", "Overtaking is freely permitted", "Bus-only lane", "Centre of a one-way road"],
+    ans: 0
+  },
+  {
+    category: "Road Markings",
+    q: "What do these road centre markings indicate?",
+    img: S.mkDblYellow,
+    opts: ["Overtaking permitted with caution", "No overtaking from either direction", "Pedestrian crossing ahead", "Road is under repair"],
+    ans: 1
+  },
+  {
+    category: "Road Markings",
+    q: "What do these road markings near a pedestrian crossing indicate?",
+    img: S.mkZigzag,
+    opts: ["Speed bumps ahead", "No parking or overtaking is allowed near the crossing", "School zone area", "Bus stop location"],
+    ans: 1
+  },
+  {
+    category: "Road Markings",
+    q: "What does this road marking mean?",
+    img: S.mkYellowBox,
+    opts: ["Taxi waiting area", "You must not enter unless your exit is clear", "Bus stop area", "No-parking zone"],
+    ans: 1
+  },
+  {
+    category: "Road Markings",
+    q: "What does this road marking indicate?",
+    img: S.mkArrow,
+    opts: ["Lane is closed ahead", "You must travel in that direction from that lane", "Overtaking is allowed", "Merging lane ahead"],
+    ans: 1
+  },
+  {
+    category: "Road Markings",
+    q: "Cat's eye reflectors embedded in the road are used for:",
+    opts: ["Speed measurement", "Decoration only", "Lane guidance especially at night and in low visibility", "Marking bus stops"],
+    ans: 2
+  },
+
+  // ── Traffic Lights ──
+  {
+    category: "Traffic Lights",
+    q: "What does this traffic signal mean?",
+    img: S.ltAmber,
+    opts: ["Accelerate to clear the junction", "Proceed with full speed", "Stop if it is safe to do so", "Give way to pedestrians only"],
+    ans: 2
+  },
+  {
+    category: "Traffic Lights",
+    q: "At this type of intersection signal, what must you do?",
+    img: S.ltFlashRed,
+    opts: ["Proceed with caution at any time", "Treat it as a STOP sign: stop completely, give way, then proceed when safe", "Stop indefinitely", "Speed through quickly"],
+    ans: 1
+  },
+  {
+    category: "Traffic Lights",
+    q: "What does this traffic signal mean?",
+    img: S.ltFlashAmber,
+    opts: ["Stop completely and wait", "Treat it as a red light", "Proceed with caution", "Sound horn and proceed"],
+    ans: 2
+  },
+  {
+    category: "Traffic Lights",
+    q: "What does this traffic signal allow you to do?",
+    img: S.ltGrnArrow,
+    opts: ["Turn right only, oncoming traffic is stopped", "Go straight or turn", "Proceed in any direction", "Stop and wait for full green"],
+    ans: 0
+  },
+  {
+    category: "Traffic Lights",
+    q: "You encounter this traffic signal. What must you do?",
+    img: S.ltRed,
+    opts: ["Slow down and proceed carefully", "Stop completely behind the stop line", "Proceed if no other traffic is visible", "Sound horn and proceed"],
+    ans: 1
+  },
+
+  // ── Traffic Regulations ──
+  {
+    category: "Traffic Regulations",
+    q: "What is the maximum permitted blood alcohol concentration (BAC) for a driver in Sri Lanka?",
+    opts: ["0.08%", "0.05%", "0.10%", "0.06%"],
+    ans: 3
+  },
+  {
+    category: "Traffic Regulations",
+    q: "Is wearing a seatbelt mandatory in Sri Lanka?",
+    opts: ["Only on expressways", "Only for the driver", "For all vehicle occupants", "It is optional"],
+    ans: 2
+  },
+  {
+    category: "Traffic Regulations",
+    q: "Who is required to wear a helmet in Sri Lanka?",
+    opts: ["Motorcycle riders only", "Cyclists only", "Both motorcycle riders and pillion passengers", "Only if riding above 60 km/h"],
+    ans: 2
+  },
+  {
+    category: "Traffic Regulations",
+    q: "Using a hand-held mobile phone while driving in Sri Lanka is:",
+    opts: ["Allowed in slow traffic", "Illegal", "Allowed on highways only", "Allowed for calls under 1 minute"],
+    ans: 1
+  },
+  {
+    category: "Traffic Regulations",
+    q: "Which documents must a driver carry when operating a vehicle in Sri Lanka?",
+    opts: ["Driving licence only", "Vehicle registration only", "Driving licence, vehicle registration, and valid insurance", "Insurance certificate only"],
+    ans: 2
+  },
+  {
+    category: "Traffic Regulations",
+    q: "What is the minimum age to obtain a driving licence for a motor car in Sri Lanka?",
+    opts: ["16 years", "21 years", "17 years", "18 years"],
+    ans: 3
+  },
+  {
+    category: "Traffic Regulations",
+    q: "Where is parking prohibited by law?",
+    opts: ["Near fire hydrants only", "Only in marked no-parking zones", "On pedestrian crossings, near fire hydrants, bus stops, and intersections", "Only on main roads"],
+    ans: 2
+  },
+  {
+    category: "Traffic Regulations",
+    q: "Using the horn is generally prohibited:",
+    opts: ["At all roundabouts", "In designated quiet zones and in residential areas between 10 PM and 6 AM", "On all national roads", "Within 500 m of a school"],
+    ans: 1
+  },
+  {
+    category: "Traffic Regulations",
+    q: "If you are involved in an accident causing injury in Sri Lanka, you must:",
+    opts: ["Report to the nearest police station within 24 hours", "Leave if your vehicle is undamaged", "Only exchange details with the other party", "Report only if asked by police"],
+    ans: 0
+  },
+  {
+    category: "Traffic Regulations",
+    q: "Driving under the influence of alcohol in Sri Lanka can result in:",
+    opts: ["A verbal warning only", "A fine of Rs. 25,000 and/or imprisonment", "Loss of licence for one week", "A Rs. 1,000 fine"],
+    ans: 1
+  },
+
+  // ── Safe Driving ──
+  {
+    category: "Safe Driving",
+    q: "What is the recommended safe following distance rule in normal conditions?",
+    opts: ["1-second rule", "2-second rule", "10-metre rule", "5-second rule"],
+    ans: 1
+  },
+  {
+    category: "Safe Driving",
+    q: "When driving in heavy rain, you should:",
+    opts: ["Increase speed to clear rain faster", "Drive on the shoulder", "Reduce speed, increase following distance, and use low-beam lights", "Turn on hazard lights and stop on the road"],
+    ans: 2
+  },
+  {
+    category: "Safe Driving",
+    q: "Driving while fatigued is considered:",
+    opts: ["Acceptable for short trips", "Only dangerous at night", "As dangerous as drunk driving", "Fine if you drink coffee first"],
+    ans: 2
+  },
+  {
+    category: "Safe Driving",
+    q: "When parking on a downhill slope, you should turn your front wheels:",
+    opts: ["Straight ahead", "Away from the curb", "Toward the curb", "Fully to the left"],
+    ans: 2
+  },
+  {
+    category: "Safe Driving",
+    q: "Aquaplaning (hydroplaning) refers to:",
+    opts: ["Driving in a flooded area", "Loss of steering control when tyres ride on a film of water", "Skidding on ice", "A tyre blowout in wet weather"],
+    ans: 1
+  },
+  {
+    category: "Safe Driving",
+    q: "When driving in fog, you should use:",
+    opts: ["High-beam headlights", "Hazard lights only", "Low-beam headlights and front fog lights", "No lights"],
+    ans: 2
+  },
+  {
+    category: "Safe Driving",
+    q: "You should switch from high-beam to low-beam headlights when an oncoming vehicle is within:",
+    opts: ["100 metres", "50 metres", "500 metres", "200 metres"],
+    ans: 3
+  },
+  {
+    category: "Safe Driving",
+    q: "When driving through a water splash on the road, you should:",
+    opts: ["Accelerate through it", "Drive slowly and gently test your brakes afterwards", "Stop before the splash", "Drive at normal speed without concern"],
+    ans: 1
+  },
+  {
+    category: "Safe Driving",
+    q: "Your vehicle's brakes feel spongy. This most likely indicates:",
+    opts: ["Over-inflated tyres", "Air in the brake fluid or low brake fluid", "A loose steering wheel", "Worn tyres"],
+    ans: 1
+  },
+  {
+    category: "Safe Driving",
+    q: "When approaching a level crossing with no barriers, you must:",
+    opts: ["Speed up to cross quickly", "Slow down only", "Stop, look both ways, and listen before crossing", "Sound horn and proceed"],
+    ans: 2
+  },
+  {
+    category: "Safe Driving",
+    q: "Hazard warning lights should be used when:",
+    opts: ["Driving slowly on a busy road", "Your vehicle has broken down or is causing a hazard to others", "Thanking another driver", "It is raining"],
+    ans: 1
+  },
+  {
+    category: "Safe Driving",
+    q: "Defensive driving means:",
+    opts: ["Driving as fast as possible to minimise road time", "Anticipating hazards and driving in a way that minimises risk", "Always driving in the left lane", "Braking hard at every junction"],
+    ans: 1
+  },
+
+  // ── Vehicle Maintenance ──
+  {
+    category: "Vehicle Maintenance",
+    q: "Before a long journey, you should check:",
+    opts: ["Fuel only", "Only tyre pressure", "Tyre pressure, engine oil, coolant, brakes, and lights", "Only lights and brakes"],
+    ans: 2
+  },
+  {
+    category: "Vehicle Maintenance",
+    q: "The legal minimum tyre tread depth in Sri Lanka is:",
+    opts: ["1 mm", "3 mm", "2 mm", "1.6 mm"],
+    ans: 3
+  },
+  {
+    category: "Vehicle Maintenance",
+    q: "A red battery warning light on the dashboard indicates:",
+    opts: ["Low fuel level", "An electrical or charging system fault", "Low engine oil", "Engine overheating"],
+    ans: 1
+  },
+  {
+    category: "Vehicle Maintenance",
+    q: "The oil pressure warning light illuminates while driving. You should:",
+    opts: ["Continue to the nearest town", "Ignore it if the car feels normal", "Stop safely as soon as possible and check the oil", "Reduce speed slightly and continue"],
+    ans: 2
+  },
+  {
+    category: "Vehicle Maintenance",
+    q: "Why should you check tyre pressure regularly?",
+    opts: ["It is a legal requirement", "To improve acceleration only", "For safety, fuel efficiency, and tyre longevity", "Only needed before long trips"],
+    ans: 2
+  },
+  {
+    category: "Vehicle Maintenance",
+    q: "What is the purpose of the Anti-lock Braking System (ABS)?",
+    opts: ["Automatically applies brakes when speed is too high", "Reduces stopping distance on all surfaces", "Prevents wheels from locking during emergency braking to maintain steering control", "Stops the vehicle faster than normal brakes"],
+    ans: 2
+  },
+  {
+    category: "Vehicle Maintenance",
+    q: "The handbrake (parking brake) is primarily used for:",
+    opts: ["Emergency stopping at high speed", "Normal braking on slopes", "Preventing the vehicle from rolling when parked", "Assisting steering on bends"],
+    ans: 2
+  },
+  {
+    category: "Vehicle Maintenance",
+    q: "Which dashboard light indicates that engine coolant temperature is critically high?",
+    opts: ["Oil pressure light", "Battery light", "Engine temperature warning light (thermometer symbol)", "Check engine light"],
+    ans: 2
+  },
+
+  // ── Pedestrians & Cyclists ──
+  {
+    category: "Pedestrians & Cyclists",
+    q: "At a marked pedestrian crossing, you must give way when:",
+    opts: ["Only when a police officer is present", "A pedestrian is on or waiting to cross", "Only when you are turning", "At all times, regardless of pedestrians"],
+    ans: 1
+  },
+  {
+    category: "Pedestrians & Cyclists",
+    q: "When passing a cyclist on the road, you should give a minimum clearance of:",
+    opts: ["50 centimetres", "3 metres", "2 metres", "1 metre"],
+    ans: 3
+  },
+  {
+    category: "Pedestrians & Cyclists",
+    q: "A pedestrian carrying a white cane is:",
+    opts: ["A construction worker", "A traffic marshal", "Blind or visually impaired — give extra care and space", "A surveyor"],
+    ans: 2
+  },
+  {
+    category: "Pedestrians & Cyclists",
+    q: "Children are allowed to travel in the front seat of a vehicle in Sri Lanka when:",
+    opts: ["They are over 12 years old and using a seatbelt", "At any age if an adult is present", "Never under 12 without a child seat", "Always, as long as they are seated"],
+    ans: 0
+  },
+
+  // ── Parking ──
+  {
+    category: "Parking",
+    q: "Double parking means:",
+    opts: ["Using two parking spaces", "Parking on both sides of the road", "Parking alongside a vehicle already parked at the kerb, blocking it in", "Parking in a disabled bay without a permit"],
+    ans: 2
+  },
+  {
+    category: "Parking",
+    q: "When parallel parking, your vehicle should be no more than how far from the kerb?",
+    opts: ["1 metre", "50 centimetres", "30 centimetres", "2 metres"],
+    ans: 2
+  },
+  {
+    category: "Parking",
+    q: "Parking in front of a fire hydrant is:",
+    opts: ["Allowed for up to 5 minutes", "Allowed outside business hours", "Strictly prohibited at all times", "Allowed if the hazard lights are on"],
+    ans: 2
+  },
+
+  // ── Motorway / Expressway ──
+  {
+    category: "Motorway & Expressway",
+    q: "If your vehicle breaks down on an expressway in Sri Lanka, you should:",
+    opts: ["Stop in the driving lane and call for help", "Park on the hard shoulder, switch on hazard lights, and call for assistance", "Try to repair the vehicle in the driving lane", "Signal other vehicles to push you to the next exit"],
+    ans: 1
+  },
+  {
+    category: "Motorway & Expressway",
+    q: "Which vehicles are generally NOT permitted on Sri Lanka expressways?",
+    opts: ["Private cars", "Buses", "Motorcycles and three-wheelers (tuk-tuks)", "SUVs"],
+    ans: 2
+  },
+  {
+    category: "Motorway & Expressway",
+    q: "On an expressway with three lanes, the middle lane is used for:",
+    opts: ["Overtaking only", "Slow vehicles", "Normal driving when the left lane is occupied", "Heavy vehicles only"],
+    ans: 2
+  },
+
+  // ── Emergency & First Aid ──
+  {
+    category: "Emergency & First Aid",
+    q: "What is the first thing to do upon arriving at the scene of a road accident?",
+    opts: ["Take photographs", "Move all injured persons immediately", "Ensure your safety and the safety of others, then call emergency services", "Check vehicle damage first"],
+    ans: 2
+  },
+  {
+    category: "Emergency & First Aid",
+    q: "What is the Sri Lanka Police emergency telephone number?",
+    opts: ["999", "112", "119", "118"],
+    ans: 2
+  },
+  {
+    category: "Emergency & First Aid",
+    q: "When should you NOT move an injured person after a road accident?",
+    opts: ["When they are unconscious", "When there is risk of a spinal or neck injury", "When they are conscious and alert", "Always move them to the side of the road"],
+    ans: 1
+  },
+  {
+    category: "Emergency & First Aid",
+    q: "If a vehicle catches fire after a collision, you should:",
+    opts: ["Try to extinguish it before calling help", "Evacuate all occupants immediately and call 111 (Fire)", "Keep all windows closed to contain the fire", "Continue driving to the nearest hospital"],
+    ans: 1
+  },
+  {
+    category: "Emergency & First Aid",
+    q: "What does this signal at a railway level crossing mean?",
+    img: S.railway,
+    opts: ["The train has just passed — proceed", "Proceed slowly with caution", "Stop — a train is approaching", "The signals are faulty"],
+    ans: 2
+  },
+
+  // ── Miscellaneous ──
+  {
+    category: "Miscellaneous",
+    q: "What does 'right of way' mean in road traffic?",
+    opts: ["The right-hand lane on a road", "Priority to proceed ahead of other road users", "A one-way road", "The fastest lane on a motorway"],
+    ans: 1
+  },
+  {
+    category: "Miscellaneous",
+    q: "A diamond-shaped marking inside a lane on the road indicates:",
+    opts: ["A danger zone", "A speed camera zone", "A bus, tram, or priority lane", "Overtaking zone"],
+    ans: 2
+  },
+  {
+    category: "Miscellaneous",
+    q: "When towing a trailer, the general maximum speed limit is:",
+    opts: ["Same as for cars", "100 km/h on expressways", "Typically reduced — 70 km/h maximum", "50 km/h everywhere"],
+    ans: 2
+  },
+  {
+    category: "Miscellaneous",
+    q: "You must renew your vehicle insurance:",
+    opts: ["Every 5 years", "Whenever you change address", "Before the current policy expires, at least annually", "Only when the police request it"],
+    ans: 2
+  },
+  {
+    category: "Miscellaneous",
+    q: "Which authority is responsible for issuing driving licences in Sri Lanka?",
+    opts: ["Sri Lanka Police", "Ministry of Highways", "Department of Motor Traffic (DMT)", "Local Municipal Council"],
+    ans: 2
+  },
+  {
+    category: "Miscellaneous",
+    q: "A 'No Parking' sign differs from a 'No Stopping' sign in that:",
+    opts: ["They mean exactly the same thing", "No Parking means you may stop briefly to drop off a passenger; No Stopping means you cannot stop at all", "No Stopping allows parking for 5 minutes", "No Parking applies only at night"],
+    ans: 1
+  },
+  {
+    category: "Miscellaneous",
+    q: "The term 'blind spot' refers to:",
+    opts: ["Poor vision of the driver", "The area around a vehicle not visible in the mirrors", "Fog-affected areas of a road", "Unlighted sections of a road"],
+    ans: 1
+  },
+  {
+    category: "Miscellaneous",
+    q: "When must you dip your headlights from high beam to low beam?",
+    opts: ["Only in the city", "When following another vehicle closely or when an oncoming vehicle is within 200 m", "Only during fog", "Never — keep high beam always"],
+    ans: 1
+  }
+];
+
+// ================================================================
+// APP STATE
+// ================================================================
+let playerName = "";
+let sessionQuestions = [];
+let currentIndex = 0;
+let answers = [];
+let answered = false;
+
+// ================================================================
+// UTILITIES
+// ================================================================
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ================================================================
+// START
+// ================================================================
+function startTest() {
+  const input = document.getElementById('nameInput');
+  const err = document.getElementById('nameError');
+  const name = input.value.trim();
+  if (!name) {
+    input.classList.add('error');
+    err.style.display = 'block';
+    input.focus();
+    return;
+  }
+  input.classList.remove('error');
+  err.style.display = 'none';
+
+  playerName = name;
+  sessionQuestions = shuffle(QUESTIONS).slice(0, 40);
+  currentIndex = 0;
+  answers = new Array(40).fill(null);
+  answered = false;
+
+  document.getElementById('quizGreeting').textContent = `Good luck, ${playerName}!`;
+  showScreen('quizScreen');
+  renderQuestion();
+}
+
+// ================================================================
+// RENDER QUESTION
+// ================================================================
+function renderQuestion() {
+  const q = sessionQuestions[currentIndex];
+  answered = false;
+
+  document.getElementById('categoryBadge').textContent = q.category;
+  document.getElementById('questionText').textContent = `${currentIndex + 1}. ${q.q}`;
+  document.getElementById('qCounter').textContent = `Question ${currentIndex + 1} / 40`;
+
+  const pct = Math.round((currentIndex / 40) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${currentIndex} answered`;
+
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback-box';
+  fb.style.display = 'none';
+
+  const sc = document.getElementById('signContainer');
+  if (q.img) { sc.innerHTML = q.img; sc.style.display = 'flex'; }
+  else { sc.innerHTML = ''; sc.style.display = 'none'; }
+
+  document.getElementById('nextBtn').style.display = 'none';
+
+  const labels = ['A', 'B', 'C', 'D'];
+  const list = document.getElementById('optionsList');
+  list.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const li = document.createElement('li');
+    li.className = 'option-item';
+    li.innerHTML = `<span class="option-letter">${labels[i]}</span>${opt}`;
+    li.addEventListener('click', () => selectOption(i));
+    list.appendChild(li);
+  });
+}
+
+// ================================================================
+// SELECT OPTION
+// ================================================================
+function selectOption(idx) {
+  if (answered) return;
+  answered = true;
+  answers[currentIndex] = idx;
+
+  const q = sessionQuestions[currentIndex];
+  const items = document.querySelectorAll('.option-item');
+  const fb = document.getElementById('feedbackBox');
+  const labels = ['A', 'B', 'C', 'D'];
+
+  items.forEach(li => li.classList.add('locked'));
+  items[idx].classList.add(idx === q.ans ? 'correct' : 'wrong');
+  if (idx !== q.ans) items[q.ans].classList.add('correct');
+
+  if (idx === q.ans) {
+    fb.className = 'feedback-box correct';
+    fb.textContent = `✓ Correct! The answer is ${labels[q.ans]}: ${q.opts[q.ans]}`;
+  } else {
+    fb.className = 'feedback-box wrong';
+    fb.textContent = `✗ Incorrect. The correct answer is ${labels[q.ans]}: ${q.opts[q.ans]}`;
+  }
+  fb.style.display = 'block';
+
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.style.display = 'inline-block';
+  nextBtn.textContent = currentIndex === 39 ? 'See Results →' : 'Next →';
+}
+
+// ================================================================
+// NEXT QUESTION
+// ================================================================
+function nextQuestion() {
+  if (!answered) return;
+  if (currentIndex === 39) {
+    showResults();
+    return;
+  }
+  currentIndex++;
+  renderQuestion();
+}
+
+// ================================================================
+// RESULTS
+// ================================================================
+function showResults() {
+  const correct = answers.filter((a, i) => a === sessionQuestions[i].ans).length;
+  const wrong = 40 - correct;
+  const pct = Math.round((correct / 40) * 100);
+  const pass = pct >= 80;
+
+  document.getElementById('resultIcon').textContent = pass ? '🎉' : '📋';
+  document.getElementById('resultHeading').textContent = pass ? 'Congratulations!' : 'Keep Practising!';
+  document.getElementById('resultName').textContent = playerName;
+
+  const circle = document.getElementById('scoreCircle');
+  circle.className = 'score-circle ' + (pass ? 'pass' : 'fail');
+  document.getElementById('scoreBig').textContent = correct;
+
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('wrongCount').textContent = wrong;
+  document.getElementById('percentScore').textContent = pct + '%';
+
+  const msg = document.getElementById('passMsg');
+  if (pass) {
+    msg.className = 'pass-msg pass';
+    msg.textContent = `You passed with ${pct}%! The minimum passing score is 80% (32/40). You are ready for the real written examination. Good work, ${playerName}!`;
+  } else {
+    msg.className = 'pass-msg fail';
+    msg.textContent = `You scored ${pct}%. The minimum passing score is 80% (32/40). Review the questions you got wrong and try again — you can do it, ${playerName}!`;
+  }
+
+  // Build review table
+  const tbody = document.getElementById('reviewBody');
+  tbody.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+  sessionQuestions.forEach((q, i) => {
+    const userAns = answers[i];
+    const isCorrect = userAns === q.ans;
+    const tr = document.createElement('tr');
+    if (!isCorrect) tr.classList.add('wrong');
+    tr.innerHTML = `
+      <td>${isCorrect ? '<span class="tick">✓</span>' : '<span class="cross">✗</span>'} ${i + 1}</td>
+      <td>${q.q}</td>
+      <td>${userAns !== null ? labels[userAns] + ': ' + q.opts[userAns] : '—'}</td>
+      <td><strong>${labels[q.ans]}: ${q.opts[q.ans]}</strong></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  showScreen('resultsScreen');
+  window.scrollTo(0, 0);
+}
+
+// ================================================================
+// REVIEW TOGGLE
+// ================================================================
+let reviewVisible = false;
+function toggleReview() {
+  reviewVisible = !reviewVisible;
+  const table = document.getElementById('reviewTable');
+  const btn = document.querySelector('.review-toggle');
+  table.style.display = reviewVisible ? 'table' : 'none';
+  btn.textContent = (reviewVisible ? '▲ Hide' : '▼ Show') + ' Question Review';
+}
+
+// ================================================================
+// NAVIGATION
+// ================================================================
+function goHome() {
+  document.getElementById('nameInput').value = '';
+  reviewVisible = false;
+  document.getElementById('reviewTable').style.display = 'none';
+  showScreen('welcomeScreen');
+}
+
+function retakeTest() {
+  reviewVisible = false;
+  document.getElementById('reviewTable').style.display = 'none';
+  sessionQuestions = shuffle(QUESTIONS).slice(0, 40);
+  currentIndex = 0;
+  answers = new Array(40).fill(null);
+  answered = false;
+  document.getElementById('quizGreeting').textContent = `Good luck, ${playerName}!`;
+  showScreen('quizScreen');
+  renderQuestion();
+}
+
+// Allow pressing Enter to start
+document.getElementById('nameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startTest();
+});
+</script>
+
+</body>
+</html>
