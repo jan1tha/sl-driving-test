@@ -427,6 +427,30 @@
       flex-wrap: wrap;
     }
 
+    /* LANGUAGE TOGGLE */
+    .lang-toggle {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      display: flex;
+      gap: 4px;
+    }
+    .lang-btn {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.45);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+      letter-spacing: 0.3px;
+    }
+    .lang-btn.active { background: rgba(255,255,255,0.38); border-color: white; }
+    .lang-btn:hover:not(.active) { background: rgba(255,255,255,0.26); }
+    .header { position: relative; }
+
     @media (max-width: 600px) {
       .header h1 { font-size: 17px; }
       #welcomeScreen .content, #resultsScreen .content { padding: 28px 20px; }
@@ -442,39 +466,34 @@
 
   <!-- HEADER -->
   <div class="header">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btnSI" onclick="setLang('si')">සිං</button>
+    </div>
     <div class="flag">🇱🇰</div>
-    <h1>Sri Lanka Driving Licence Practice Test</h1>
-    <p>Department of Motor Traffic — Written Examination Preparation</p>
+    <h1 id="headerTitle">Sri Lanka Driving Licence Practice Test</h1>
+    <p id="headerSub">Department of Motor Traffic — Written Examination Preparation</p>
   </div>
 
   <!-- WELCOME SCREEN -->
   <div id="welcomeScreen" class="screen active">
     <div class="content">
-      <h2>Welcome to the Practice Test</h2>
-      <p>Prepare for the Sri Lanka Department of Motor Traffic written examination with our question bank based on official topics.</p>
+      <h2 id="welcomeH2">Welcome to the Practice Test</h2>
+      <p id="welcomeP">Prepare for the Sri Lanka Department of Motor Traffic written examination with our question bank based on official topics.</p>
 
       <div class="info-cards">
-        <div class="info-card">
-          <div class="num">40</div>
-          <div class="label">Questions</div>
-        </div>
-        <div class="info-card">
-          <div class="num">80%</div>
-          <div class="label">To Pass</div>
-        </div>
-        <div class="info-card">
-          <div class="num">Random</div>
-          <div class="label">Each Session</div>
-        </div>
+        <div class="info-card"><div class="num">40</div><div class="label" id="card0">Questions</div></div>
+        <div class="info-card"><div class="num">80%</div><div class="label" id="card1">To Pass</div></div>
+        <div class="info-card"><div class="num">Random</div><div class="label" id="card2">Each Session</div></div>
       </div>
 
       <div class="input-group">
-        <label for="nameInput">Your Full Name</label>
+        <label for="nameInput" id="nameLbl">Your Full Name</label>
         <input type="text" id="nameInput" placeholder="e.g. Kamal Perera" autocomplete="name" />
         <div class="error-msg" id="nameError">Please enter your name to continue.</div>
       </div>
 
-      <button class="btn btn-primary" onclick="startTest()">Start Test &rarr;</button>
+      <button class="btn btn-primary" id="startBtn" onclick="startTest()">Start Test &rarr;</button>
     </div>
   </div>
 
@@ -513,17 +532,17 @@
 
       <div class="score-circle" id="scoreCircle">
         <span class="big-num" id="scoreBig"></span>
-        <span class="out-of">out of 40</span>
+        <span class="out-of" id="outOf">out of 40</span>
       </div>
 
       <div class="stats-row">
         <div class="stat-box">
           <div class="stat-num green" id="correctCount"></div>
-          <div class="stat-lbl">Correct</div>
+          <div class="stat-lbl" id="correctLbl">Correct</div>
         </div>
         <div class="stat-box">
           <div class="stat-num red" id="wrongCount"></div>
-          <div class="stat-lbl">Wrong</div>
+          <div class="stat-lbl" id="wrongLbl">Wrong</div>
         </div>
         <div class="stat-box">
           <div class="stat-num" id="percentScore" style="color:#8B0000"></div>
@@ -533,22 +552,22 @@
 
       <div class="pass-msg" id="passMsg"></div>
 
-      <span class="review-toggle" onclick="toggleReview()">&#9660; Show Question Review</span>
+      <span class="review-toggle" id="reviewToggleBtn" onclick="toggleReview()">&#9660; Show Question Review</span>
       <table class="review-table" id="reviewTable">
         <thead>
           <tr>
             <th>#</th>
-            <th>Question</th>
-            <th>Your Answer</th>
-            <th>Correct Answer</th>
+            <th id="thQuestion">Question</th>
+            <th id="thYour">Your Answer</th>
+            <th id="thCorrect">Correct Answer</th>
           </tr>
         </thead>
         <tbody id="reviewBody"></tbody>
       </table>
 
       <div class="result-actions">
-        <button class="btn btn-secondary" onclick="goHome()">&#8592; Back to Home</button>
-        <button class="btn btn-success" onclick="retakeTest()">&#8635; Try Again</button>
+        <button class="btn btn-secondary" id="backHomeBtn" onclick="goHome()">&#8592; Back to Home</button>
+        <button class="btn btn-success" id="tryAgainBtn" onclick="retakeTest()">&#8635; Try Again</button>
       </div>
     </div>
   </div>
@@ -1226,13 +1245,195 @@ const QUESTIONS = [
 ];
 
 // ================================================================
+// SINHALA QUESTION BANK — Official DMT Sinhala Medium Questions
+// ================================================================
+const QUESTIONS_SI = [
+  // ── මාර්ග සංඥා ──
+  { category:"මාර්ග සංඥා", q:"මෙම මාර්ග සංඥාව දකින විට එහි අදහස කුමක් ද?", img:S.noEntry, opts:["රිය නැවතීම තහනම්","ඇතුළු වීම තහනම්","ඉදිරිය ගැනීම තහනම්","U හැරීම තහනම්"], ans:1 },
+  { category:"මාර්ග සංඥා", q:"ශ්‍රී ලංකාවේ අනතුරු (warning) සංඥා කුමන හැඩයේ ද?", img:S.warningDmd, opts:["සෘජුකෝණාස්‍ර","වෘත්තාකාර","දියමන්ති","ත්‍රිකෝණ"], ans:2 },
+  { category:"මාර්ග සංඥා", q:"ශ්‍රී ලංකාවේ අනතුරු සංඥා (warning signs) හි පසුබිම් වර්ණය?", img:S.warningDmd, opts:["නිල්","රතු","කහ හෝ තැඹිලි","කොළ"], ans:2 },
+  { category:"මාර්ග සංඥා", q:"නිල් වෘත්ත සංඥාව (blue circle sign) දකින විට ඔබ දන්නේ?", img:S.blueCircle, opts:["අනතුරු ඇඟවීමකි","තහනම් ක්‍රියාවකි","අනිවාර්ය උපදෙසකි","මාර්ග තොරතුරකි"], ans:2 },
+  { category:"මාර්ග සංඥා", q:"රතු දාර ත්‍රිකෝණ සංඥාව (!) දකින විට ඔබ දන්නේ?", img:S.triWarning, opts:["ඉදිරිය නතර","ඉදිරිය සාමාන්‍ය අනතුරකි","පාසල් කලාපය","බෑවුමකි"], ans:1 },
+  { category:"මාර්ග සංඥා", q:"රතු දාර ගිනිකොනය (circle with number) දකින විට ඔබ දන්නේ?", img:S.speedLimit, opts:["මාර්ග අංකය","උපරිම වේග සීමාව","ගමනාන්තරයට දුර","මාර්ග ශ්‍රේණිය"], ans:1 },
+  { category:"මාර්ග සංඥා", q:"ත්‍රිකෝණ ඔලෙව් (Give Way) සංඥාව ආ විට ඔබ?", img:S.giveWay, opts:["සම්පූර්ණයෙන් නතර කරන්න","ප්‍රධාන මාර්ගේ රිය ධාවකයාට ඉඩ දෙන්න","ඇතුළු වීම තහනම්","සෙමින් ගිය හැකිය"], ans:1 },
+  { category:"මාර්ග සංඥා", q:"STOP සංඥාව ආ විට ඔබ කළ යුත්තේ?", img:S.stopSign, opts:["සෙමින් ගමන් කරන්න","සම්පූර්ණයෙන් නතර කර ඉඩ දෙමින් ඉදිරිය යන්න","හොරිනය නාද කරන්න","රථ ගැවසෙන විට නතර කරන්න"], ans:1 },
+  { category:"මාර්ග සංඥා", q:"රතු ගිනිකොනය හා ඇල රේඛාව ඇති සංඥාව (prohibition) දකින විට?", img:S.prohibit, opts:["අනිවාර්ය ක්‍රියාවකි","තහනම් ක්‍රියාවකි","ඉදිරිය අනතුරු ඇඟවීමකි","තොරතුරු පමණකි"], ans:1 },
+  { category:"මාර්ග සංඥා", q:"මෙම සංඥාව දකින විට ඔබ දන්නේ?", img:S.pedestrian, opts:["පාගමන් තහනම්","ඉදිරිය පාද ගමනාකරුවෝ","පාසල් කලාපය","ඇවිදීමේ මාර්ගය"], ans:1 },
+  { category:"මාර්ග සංඥා", q:"No U-turn සංඥාව (no u-turn) දකින විට ඔබ?", img:S.noUturn, opts:["වම් හැරීම තහනම්","U හැරීම තහනම්","ඇතුළු වීම තහනම්","දකුණු හැරීම තහනම්"], ans:1 },
+  { category:"මාර්ග සංඥා", q:"යතුරු පැදි තහනම් (no motorcycles) සංඥාව දකින විට?", img:S.noMoto, opts:["යතුරු පැදි සෙමින් යාම","යතුරු පැදි ඇතුළු වීම තහනම්","යතුරු පැදිවලට පමණකි","යතුරු පැදි නතර ස්ථානය"], ans:1 },
+  { category:"මාර්ග සංඥා", q:"නිල් සෘජුකෝණාස්‍ර (blue rectangle) සංඥාව කුමන ආකාරය ද?", img:S.infoSign, opts:["අනතුරු සංඥාව","තහනම් සංඥාව","තොරතුරු හෝ දිශා සංඥාව","අනිවාර්ය සංඥාව"], ans:2 },
+  { category:"මාර්ග සංඥා", q:"ද්‍වි-දිශා (two-way traffic) සංඥාව දකින විට?", img:S.twoWay, opts:["රවුම් කොටස ඉදිරිය","ද්‍වි-දිශා රථ ගමනාගමනය","ඉදිරිය ගැනීමට ඉඩ ඇත","ඒකාබද්ධ ලේනය"], ans:1 },
+  { category:"මාර්ග සංඥා", q:"ලොරි-බෑවුම් (truck slope) සංඥාව දකින විට?", img:S.truckSlope, opts:["ලොරි නතර කළ යුතු ය","ඉදිරිය බෑවුමකි","느린 රිය ලේනය","ලොරි නතර ස්ථානය"], ans:1 },
+
+  // ── රථ ගමනාගමන ආලෝකය ──
+  { category:"රථ ගමනාගමන ආලෝකය", q:"රථ ගමනාගමන සංඥාවේ කහ (amber) ආලෝකය දකින විට?", img:S.ltAmber, opts:["හරස් මංසන්ධිය ශීඝ්‍රව ඉක්මවා යන්න","සාමාන්‍ය වේගයෙන් ගිය හැකිය","ආරක්ෂිත නම් නතර කරන්න","පාද ගමනාකරුවන්ට ඉඩ දෙන්න"], ans:2 },
+  { category:"රථ ගමනාගමන ආලෝකය", q:"දිලිසෙන රතු (flashing red) ආලෝකය ආ විට?", img:S.ltFlashRed, opts:["ප්‍රවේශමෙන් ගිය හැකිය","STOP සංඥාවක් ලෙස සලකා නතර කර ඉදිරිය යන්න","සදාකාලිකව නතර කරන්න","ශීඝ්‍රයෙන් ඉදිරිය යන්න"], ans:1 },
+  { category:"රථ ගමනාගමන ආලෝකය", q:"දිලිසෙන කහ (flashing amber) ආලෝකය ආ විට?", img:S.ltFlashAmber, opts:["සම්පූර්ණයෙන් නතර කරන්න","රතු ආලෝකයක් ලෙස සලකන්න","ප්‍රවේශමෙන් ගමන් කරන්න","හොරිනය නාද කරන්න"], ans:2 },
+  { category:"රථ ගමනාගමන ආලෝකය", q:"කොළ දකුණු ඊතල (green right arrow) ආලෝකය ආ විට?", img:S.ltGrnArrow, opts:["දකුණට හැරිය හැකිය, විරුද්ධ රථ නතරයි","කෙළින් හෝ හැරිය හැකිය","ඕනෑ ම දිශාවට ගිය හැකිය","සම්පූර්ණ කොළ ආ දක්වා රැඳෙන්න"], ans:0 },
+  { category:"රථ ගමනාගමන ආලෝකය", q:"රතු (red) ආලෝකය ආ විට ඔබ?", img:S.ltRed, opts:["සෙමින් ගමන් කරන්න","නතර රේඛාව ළඟ සම්පූර්ණයෙන් නතර කරන්න","රථ නොමැති නම් ගිය හැකිය","හොරිනය නාද කරමින් ගිය හැකිය"], ans:1 },
+
+  // ── මාර්ග ලකුණු ──
+  { category:"මාර්ග ලකුණු", q:"මාර්ගය මැදේ ඇති කැඩුණු සුදු රේඛාව (broken white line) දකින විට?", img:S.mkBroken, opts:["ඉදිරිය ගැනීම තහනම්","ආරක්ෂිත නම් ඉදිරිය ගත හැකිය","රිය නතර කිරීම තහනම්","බස් ලේනය"], ans:1 },
+  { category:"මාර්ග ලකුණු", q:"මාර්ගය මැදේ ඇති ඝන සුදු රේඛාව (solid white line) දකින විට?", img:S.mkSolid, opts:["ඔබේ පැත්තෙන් ඉදිරිය ගැනීම තහනම්","ඉදිරිය ගැනීම නිදහසේ කළ හැකිය","බස් ලේනය","ඒකාකාරී මාර්ගය"], ans:0 },
+  { category:"මාර්ග ලකුණු", q:"දෙගුණ කහ රේඛා (double yellow lines) දකින විට?", img:S.mkDblYellow, opts:["ප්‍රවේශමෙන් ඉදිරිය ගත හැකිය","දෙදිශාවෙන්ම ඉදිරිය ගැනීම තහනම්","ඉදිරිය පාද ගමනාකරු","මාර්ග අලුත්වැඩියා"], ans:1 },
+  { category:"මාර්ග ලකුණු", q:"පාද ශාලාව (zebra crossing) ළඟ සිහිල් (zigzag) ලකුණු දකින විට?", img:S.mkZigzag, opts:["ඉදිරිය ගිලිහුම් ඇත","ශාලාව ළඟ රිය නතර කිරීම හෝ ඉදිරිය ගැනීම තහනම්","පාසල් කලාපය","බස් නතර ස්ථානය"], ans:1 },
+  { category:"මාර්ග ලකුණු", q:"කහ පෙට්ටිය (yellow box junction) දකින විට?", img:S.mkYellowBox, opts:["ටැක්සි නතර ස්ථානය","ඉදිරිය ශාඛාව ශූන්‍ය නම් පමණ ඇතුළු වන්න","බස් නතර ස්ථානය","රිය නතර කිරීම තහනම්"], ans:1 },
+  { category:"මාර්ග ලකුණු", q:"සුදු ඊතල (straight arrow) ලකුණ ඇත. ඔබ?", img:S.mkArrow, opts:["ලේනය වැසී ඇත","ඒ ලේනයෙන් කෙළින් ගිය යුතු ය","ඉදිරිය ගැනීමට ඉඩ ඇත","ඒකාබද්ධ ලේනය"], ans:1 },
+  { category:"මාර්ග ලකුණු", q:"Cat's eye (රාත්‍රී ලකුණු ප්‍රකාශ) භාවිතා කරන්නේ?", opts:["වේගය මිනුම","සිළුමිණිය","රාත්‍රියේ හා අඩු දෘශ්‍යතාවේ ලේන මාර්ගෝපදේශ","බස් නතර ලකුණු"], ans:2 },
+
+  // ── වේග සීමා ──
+  { category:"වේග සීමා", q:"ශ්‍රී ලංකාවේ නාගරික ප්‍රදේශවල උපරිම වේග සීමාව?", opts:["60 km/h","40 km/h","50 km/h","70 km/h"], ans:2 },
+  { category:"වේග සීමා", q:"ශ්‍රී ලංකාවේ ද්‍රුතගාමී මාර්ගවල (expressway) උපරිම වේග සීමාව?", opts:["90 km/h","80 km/h","110 km/h","100 km/h"], ans:3 },
+  { category:"වේග සීමා", q:"ශ්‍රී ලංකාවේ ග්‍රාමීය මාර්ගවල උපරිම වේග සීමාව?", opts:["50 km/h","80 km/h","70 km/h","90 km/h"], ans:2 },
+  { category:"වේග සීමා", q:"පාසල් කලාප (school zone) වේග සීමාව?", opts:["30 km/h","50 km/h","40 km/h","20 km/h"], ans:2 },
+  { category:"වේග සීමා", q:"මාර්ගයේ ලිඛිත වේග සීමා සංඥාව?", opts:["අනතුරු ලකුණ","නිල් තොරතුරු ලකුණ","සාමාන්‍ය සීමාව ආදේශ කරයි","කොළ දිශා ලකුණ"], ans:2 },
+
+  // ── මාර්ග නීති ──
+  { category:"මාර්ග නීති", q:"ශ්‍රී ලංකාවේ රිය ධාවනය කළ යුත්තේ?", opts:["දකුණු පැත්තේ","වම් පැත්තේ","මධ්‍යයේ","ඕනෑ ම ස්ථානයක"], ans:1 },
+  { category:"මාර්ග නීති", q:"රෝටරිය (roundabout) ළඟ ආ විට ප්‍රාධාන්‍ය ලැබෙන්නේ?", opts:["ඇතුළු වන රිය","රෝටරිය තුළ ගමන් ගන්නා රිය","විශාලතම රිය","දකුණෙන් ආ රිය"], ans:1 },
+  { category:"මාර්ග නීති", q:"සංඥා රහිත හරස් මංසන්ධියකදී ඉඩ දිය යුත්තේ?", opts:["ඔබේ වමේ රිය","ඔබේ දකුණේ රිය","ලොකුම රිය","ඔබ පිටුපස රිය"], ans:1 },
+  { category:"මාර්ග නීති", q:"ඉදිරිය ගැනීම (overtaking) කළ යුතු දෙස?", opts:["ඉදිරිපස රිය වමේ","ඉදිරිපස රිය දකුණේ","ඕනෑ ම පැත්තකින්","හොරිනය නාද කරමින්"], ans:1 },
+  { category:"මාර්ග නීති", q:"ඝන මධ්‍යම රේඛාව (solid centre line) ඇත. ඔබ?", opts:["රථ නොමැති නම් ඉදිරිය ගිය හැකිය","ඉදිරිය ගැනීම කිසිසේත් ම කළ නොහැකිය","රාත්‍රියේ ගිය හැකිය","ශීඝ්‍ර රිය ඉදිරිය ගිය හැකිය"], ans:1 },
+  { category:"මාර්ග නීති", q:"හදිසි රිය (ambulance/fire engine) ළඟ ළඟ ආ විට?", opts:["ශීඝ්‍රයෙන් ඉදිරිය යන්න","වම් දෙසට ඉවත් වී ඉඩ දෙන්න","ඔබේ ලේනයේ ගමන් කරන්න","සම්පූර්ණ නතර කරන්න"], ans:1 },
+  { category:"මාර්ග නීති", q:"ඉදිරිය ගත් (overtaking) පසු ඔබ වම් ලේනයට ආපසු හැරිය යුත්තේ?", opts:["ක්ෂණිකව","100 m ගිය පසු","ඔබේ ගිය රිය කැඩපතෙන් දකින ලෙස","ඔහු ලකුණ කළ විට"], ans:2 },
+  { category:"මාර්ග නීති", q:"හොරිනය (horn) භාවිතා කළ යුතු ස්ථිතිය?", opts:["අනෙකුත් ධාවකයන්ට සලාම් කිරීමට","අනතුරු හෝ ඔබේ ස්ථානය ඇඟවීමට","ජනයා ඉවත් කිරීමට","කැමති ඕනෑ ම ස්ථිතිවල"], ans:1 },
+  { category:"මාර්ග නීති", q:"රාත්‍රී ධාවනය සඳහා headlights (ඉදිරිපස ආලෝකය) දල්වා ගිය යුත්තේ?", opts:["රාත්‍රී ආලෝකය ශූන්‍ය ස්ථානවල ම","නගරවල ම","සූර්යාස්ත සිට සූර්යෝදය දක්වා; දෘශ්‍යතාව අඩු ස්ථිතිවල","ද්‍රුතගාමී මාර්ගවල ම"], ans:2 },
+
+  // ── රථ වාහන රෙගුලාසි ──
+  { category:"රථ වාහන රෙගුලාසි", q:"ශ්‍රී ලංකාවේ ධාවකයාට ඉඩ දෙන රුධිරයේ ඇල්කොහොල් (BAC) ප්‍රමාණය?", opts:["0.08%","0.05%","0.10%","0.06%"], ans:3 },
+  { category:"රථ වාහන රෙගුලාසි", q:"ශ්‍රී ලංකාවේ සීට් බෙල්ට් (seatbelt) පැළඳිය යුත්තේ?", opts:["ද්‍රුතගාමී මාර්ගවල ම","ධාවකයා ම","සියලු ම රිය ගමනාකරුවෝ","අනිවාර්ය නොවේ"], ans:2 },
+  { category:"රථ වාහන රෙගුලාසි", q:"ශ්‍රී ලංකාවේ යතුරු පැදිකරු හෙල්මට් (helmet) පළඳිය යුත්තේ?", opts:["යතුරු පැදිකරු ම","බයිසිකල් කරුවෝ ම","යතුරු පැදිකරු හා පිළිපස ගමනාකරු","60 km/h ඉක්මවා ගිය විට"], ans:2 },
+  { category:"රථ වාහන රෙගුලාසි", q:"ධාවනය කරන ගමන් රැහැන් රහිත දුරකතනය (handheld phone) ?", opts:["ෙ‍සොමින් ධාවනය ඉඩ ලැබේ","නීති-විරෝධී ය","ශීඝ්‍රගාමී ඉඩ ලැබේ","1 min ඇතුළත ඉඩ ලැබේ"], ans:1 },
+  { category:"රථ වාහන රෙගුලාසි", q:"ශ්‍රී ලංකාවේ රිය ධාවනය කිරීමේ දී රැගත යුතු ලේඛන?", opts:["රිය ධාවන බලපත්‍රය ම","රිය ලියාපදිංචිය ම","රිය ධාවන බලපත්‍රය, ලියාපදිංචිය හා රක්ෂණය","රක්ෂණ ලේඛනය ම"], ans:2 },
+  { category:"රථ වාහන රෙගුලාසි", q:"ශ්‍රී ලංකාවේ රිය ධාවන බලපත්‍රය (driving licence) ලබා ගැනීමේ අවම වයස?", opts:["16","21","17","18"], ans:3 },
+  { category:"රථ වාහන රෙගුලාසි", q:"ශ්‍රී ලංකාවේ රිය රක්ෂණය (motor insurance)?", opts:["කැමති නම් ලබා ගත හැකිය","ශ්‍රේෂ්ඨ රිය සඳහා ම","නීත්‍යානුකූලව අනිවාර්ය ය","ශීඝ්‍රගාමී ම"], ans:2 },
+  { category:"රථ වාහන රෙගුලාසි", q:"ශ්‍රී ලංකාවේ රිය ලියාපදිංචිය (registration) අලුත් කළ යුත්තේ?", opts:["5 වසරකට","2 වසරකට","සෑම වසරකට","ලියාපදිංචි කළ පසු නොකළ ද හැකිය"], ans:2 },
+  { category:"රථ වාහන රෙගුලාසි", q:"රිය ධාවනය කිරීමේ දී රිය ධාවන බලපත්‍රය නොතිබෙනවා නම් දඩය?", opts:["රු. 1,000","රු. 2,500","රු. 3,000 දක්වා","රු. 5,000"], ans:2 },
+  { category:"රථ වාහන රෙගුලාසි", q:"මත්ද්‍රව්‍ය (alcohol/drugs) ලබා ගෙන රිය ධාවනය කිරීමේ දඩය?", opts:["රු. 5,000","රු. 25,000 හා/හෝ රිය ධාවන බලපත්‍රය අහෝසි","රිය ළඟ ලකුණ","ඉඩ ලැබේ"], ans:1 },
+
+  // ── ආරක්ෂිත ධාවනය ──
+  { category:"ආරක්ෂිත ධාවනය", q:"ශ්‍රී ලංකාවේ ආරක්ෂිත රිය ගමන් දුර (safe following distance) රීතිය?", opts:["1-second rule","2-second rule","10 m","5-second rule"], ans:1 },
+  { category:"ආරක්ෂිත ධාවනය", q:"ශක්‍ෂ වර්ෂාවේ (heavy rain) ධාවනය ආ විට ඔබ?", opts:["වේගය වැඩි කරන්න","ශාඛා මාර්ගයේ නතර කරන්න","වේගය අඩු කර, ගමන් දුර වැඩි කරන්න","Hazard ආලෝකය දල්වා නතර කරන්න"], ans:2 },
+  { category:"ආරක්ෂිත ධාවනය", q:"නිදිමත ලෙස (drowsy/fatigue) රිය ධාවනය?", opts:["කෙටි ගමන් ඉඩ ලැබේ","රාත්‍රී ධාවනයේ ම අනතුරු","මත්ද්‍රව්‍ය ලෙස රිය ධාවනය (drunk driving) තරම් ම අනතුරු","කෝපි බෝතලයක් ගෙනෙිය හැකිය"], ans:2 },
+  { category:"ආරක්ෂිත ධාවනය", q:"Aquaplaning (hydro-planing) යනු?", opts:["ගංවතුරේ ධාවනය","ජල ස්ථරයක රෝදය ලූ — රිය ස්ථිර නොවේ","හිමේ ලූ (skid)","ටයරය ශීඝ්‍ර ලෙස හිඳිනු ලැබීම"], ans:1 },
+  { category:"ආරක්ෂිත ධාවනය", q:"ලිළිල ළිළිල (fog) ස්ථිතිවල ධාවනය?", opts:["High beam ආලෝකය","Hazard ආලෝකය ම","Low beam ආලෝකය හා fog ආලෝකය","ආලෝකය නොමැතිව"], ans:2 },
+  { category:"ආරක්ෂිත ධාවනය", q:"ජල ශල්‍ය ස්ථාන (water splash) ළඟ ආ විට ඔබ?", opts:["ශීඝ්‍රව ගිය හැකිය","සෙමින් ගොස් ෙ‍බ්‍රේක් පරීක්ෂා කරන්න","නතර කරන්න","සාමාන්‍ය ලෙස ගිය හැකිය"], ans:1 },
+  { category:"ආරක්ෂිත ධාවනය", q:"ඉදිරිපස ආලෝකය (high beam) dim (low beam) කළ යුත්තේ?", opts:["නගරයේ ම","200 m ළඟ ළඟ ආ ඕනෑ ම රිය ළඟ","ළිළිල ළිළිල ස්ථිතිවල ම","කිසිදා"], ans:1 },
+
+  // ── රිය නඩත්තු ──
+  { category:"රිය නඩත්තු", q:"දිගු ගමනකට ප්‍රථම ඔබ පරීක්ෂා කළ යුත්තේ?", opts:["ඉන්ධන ම","ටයර් ම","ටයර්, ෙත්ල්, ශීතල ජලය, ෙ‍බ්‍රේක් හා ආලෝකය","ආලෝකය ම"], ans:2 },
+  { category:"රිය නඩත්තු", q:"ටයර් ත්‍රෙඩ් ගැඹුර (tread depth) නීතිය ලෙස?", opts:["1 mm","3 mm","2 mm","1.6 mm"], ans:3 },
+  { category:"රිය නඩත්තු", q:"රතු battery ලාම්පුව (dashboard) දල්වෙනවා නම්?", opts:["ඉන්ධන අඩු ය","විද්‍යුත් / Charging ගැටලුවකි","ෙත්ල් අඩු ය","ශීතල ජලය ගැටලු"], ans:1 },
+  { category:"රිය නඩත්තු", q:"ධාවනය කරන ගමන් oil pressure ලාම්පුව දල්වෙනවා නම්?", opts:["ළඟ ම නගරය දක්වා ගිය හැකිය","නොතකා ගිය හැකිය","ශීඝ්‍රයෙන් ආරක්ෂිත ස්ථානයක නතර කරන්න","වේගය ටිකක් අඩු කරන්න"], ans:2 },
+  { category:"රිය නඩත්තු", q:"ABS (Anti-lock Braking System) ප්‍රධාන අරමුණ?", opts:["ස්වයංක්‍රීය ෙ‍බ්‍රේකය","නතර කිරීම ශීඝ්‍ර කරයි","හදිසි ෙ‍බ්‍රේකයේ රෝදය අගුළු ගැසීම වළකා ස්ථාවරකරණය","ස්ලිප් ලෙස නතර කරයි"], ans:2 },
+
+  // ── හදිසි & ප්‍රථමාධාර ──
+  { category:"හදිසි & ප්‍රථමාධාර", q:"මෙම රේල් ගමනාගමන (railway crossing) සංඥාව දකින විට?", img:S.railway, opts:["ට්‍රේනය ගිය — ගිය හැකිය","ප්‍රවේශමෙන් ගිය හැකිය","නතර කරන්න — ට්‍රේනයක් ළඟ ළඟ ා","සංඥාව නැතිය — ගිය හැකිය"], ans:2 },
+  { category:"හදිසි & ප්‍රථමාධාර", q:"ශ්‍රී ලංකාවේ රිය අනතුරකදී (injury) ඔබ?", opts:["ෆොටෝ ගන්න","ආහාර ගාමීන් ශීඝ්‍රව ගෙනෙිය යුතු ය","ආරක්ෂාව සහතික කර හදිසි සේවා ඇමතිය යුතු ය","රිය හානි ගැන පළමු සලකන්න"], ans:2 },
+  { category:"හදිසි & ප්‍රථමාධාර", q:"ශ්‍රී ලංකාවේ පොලිස් හදිසි දුරකතන අංකය?", opts:["999","112","119","118"], ans:2 },
+  { category:"හදිසි & ප්‍රථමාධාර", q:"Hazard warning ආලෝකය (hazard lights) භාවිතා කළ යුත්තේ?", opts:["ෙ‍සොමින් ධාවනය","රිය අනතුරක් හෝ හදිසි ස්ථිතිය","ශ්‍රේෂ්ඨ ධාවකයාට ස්තූති","ශක්‍ෂ වර්ෂාවේ ම"], ans:1 },
+
+  // ── රිය නතර කිරීම ──
+  { category:"රිය නතර කිරීම", q:"Double parking (ද්‍විත්ව රිය නැවතීම) යනු?", opts:["DriverSpaces 2 ක් ගැනීම","දෙ-පැත්තේ රිය නතර","දැනටමත් නතර රිය ළඟ තවත් රිය නතර","Disabled bay ළඟ"], ans:2 },
+  { category:"රිය නතර කිරීම", q:"ගිනිනිවීම් (fire hydrant) ළඟ රිය නතර?", opts:["5 min ඉඩ ලැබේ","ව්‍යාපාරික නොවන කාලයේ","සෑම ස්ථිතියකදී ම තහනම්","Hazard ආලෝකය දල්වා ඉඩ ලැබේ"], ans:2 },
+  { category:"රිය නතර කිරීම", q:"Parallel parking ළඟ curb (කිසිල) ළඟ ඇති ස්ථිතිය?", opts:["1 m","50 cm","30 cm","2 m"], ans:2 },
+
+  // ── ද්‍රුතගාමී මාර්ග ──
+  { category:"ද්‍රුතගාමී මාර්ග", q:"Expressway රිය කැඩීමේ ස්ථිතිවල ඔබ?", opts:["ධාවන ලේනයේ නතර","Hard shoulder ළඟ නතර කර Hazard දල්ව ගැනීමේ සහාය ඇමතිය යුතු","ලේනයේ ම අලුත්වැඩියා","Push කරන ලෙස සංඥා"], ans:1 },
+  { category:"ද්‍රුතගාමී මාර්ග", q:"ශ්‍රී ලංකා expressway ළඟ ඉඩ නොලැබෙන රිය?", opts:["ජීවාතුර රිය","බස්","යතුරු පැදි හා ත්‍රීවිල් (tuk-tuk)","SUV"], ans:2 },
+
+  // ── පාද ගමනාකරු ──
+  { category:"පාද ගමනාකරු", q:"Zebra crossing ළඟ ජනයා ඇති ස්ථිතිවල ඔබ?", opts:["පොලිස් ස්ථානය ළඟ ම","ජනයා ශාලාව ළඟ ආ විට ඉඩ ලැබේ","හැරෙන ස්ථිතිවල ම","ශාලාව ළඟ ජනයා ඉඩ ලැබේ"], ans:1 },
+  { category:"පාද ගමනාකරු", q:"බයිසිකල් කරුවෙකු ළඟ ළඟ ා විට ලබා දිය යුතු අවම ස්ථානය?", opts:["50 cm","3 m","2 m","1 m"], ans:3 },
+
+  // ── විවිධ ──
+  { category:"විවිධ", q:"Blind spot (නිවැරදිව නොදකිනු ලැබෙන ස්ථාන) යනු?", opts:["ධාවකයාගේ ම ාඳ දෘශ්‍ය","රිය ආශ්‍රිත කැඩපතෙන් නොදකිනු ලැබෙන ස්ථාන","ලිළිල ලෙළ ස්ථාන","ආලෝකය නොමැති ස්ථාන"], ans:1 },
+  { category:"විවිධ", q:"ශ්‍රී ලංකාවේ රිය ධාවන බලපත්‍ර ලබා දෙන ආයතනය?", opts:["ශ්‍රී ලංකා පොලිස්","ශ්‍රේෂ්ඨාධිකරණය","මෝටර් රථ ප්‍රවාහන දෙපාර්තමේන්තුව (DMT)","ප්‍රාදේශීය ලේකම්"], ans:2 }
+];
+
+// ================================================================
+// UI TEXT (bilingual)
+// ================================================================
+const UI = {
+  en: {
+    title:"Sri Lanka Driving Licence Practice Test",
+    sub:"Department of Motor Traffic — Written Examination Preparation",
+    h2:"Welcome to the Practice Test",
+    p:"Prepare for the Sri Lanka Department of Motor Traffic written examination with our question bank based on official topics.",
+    cards:["Questions","To Pass","Each Session"],
+    nameLbl:"Your Full Name", namePh:"e.g. Kamal Perera", nameErr:"Please enter your name to continue.",
+    startBtn:"Start Test →",
+    outOf:"out of 40",
+    correctLbl:"Correct", wrongLbl:"Wrong",
+    showReview:"▼ Show Question Review", hideReview:"▲ Hide Question Review",
+    thQ:"Question", thYour:"Your Answer", thCorrect:"Correct Answer",
+    backHome:"← Back to Home", tryAgain:"↺ Try Again",
+    goodLuck: n => `Good luck, ${n}!`,
+    qOf: (c,t) => `Question ${c} / ${t}`,
+    answered: n => `${n} answered`,
+    next:"Next →", seeResults:"See Results →",
+    fbCorrect: (l,t) => `✓ Correct! The answer is ${l}: ${t}`,
+    fbWrong:   (l,t) => `✗ Incorrect. The correct answer is ${l}: ${t}`,
+    pass:"Congratulations!", fail:"Keep Practising!",
+    passMsg: (pct,n) => `You passed with ${pct}%! Minimum passing score is 80% (32/40). You are ready for the real examination. Well done, ${n}!`,
+    failMsg: (pct,n) => `You scored ${pct}%. Minimum passing score is 80% (32/40). Review the wrong answers and try again — you can do it, ${n}!`,
+  },
+  si: {
+    title:"ශ්‍රී ලංකා රිය ධාවන බලපත්‍ර පුහුණු විභාගය",
+    sub:"මෝටර් රථ ප්‍රවාහන දෙපාර්තමේන්තුව — ලිඛිත විභාග සූදානම",
+    h2:"පුහුණු විභාගයට සාදරයෙන් පිළිගනිමු",
+    p:"ශ්‍රී ලංකා මෝටර් රථ ප්‍රවාහන දෙපාර්තමේන්තුවේ ලිඛිත රිය ධාවන විභාගයට නිල ප්‍රශ්න භාවිතයෙන් සූදානම් වන්න.",
+    cards:["ප්‍රශ්න","සමත් වීමට","සෑම සැසියකම"],
+    nameLbl:"ඔබේ සම්පූර්ණ නම", namePh:"උදා: කමල් පෙරේරා", nameErr:"කරුණාකර ඔබේ නම ඇතුළත් කරන්න.",
+    startBtn:"විභාගය ආරම්භ කරන්න →",
+    outOf:"/ 40 න්",
+    correctLbl:"නිවැරදි", wrongLbl:"වැරදි",
+    showReview:"▼ ප්‍රශ්න සමාලෝචනය", hideReview:"▲ සඟවන්න",
+    thQ:"ප්‍රශ්නය", thYour:"ඔබේ පිළිතුර", thCorrect:"නිවැරදි පිළිතුර",
+    backHome:"← නැවත ආරම්භයට", tryAgain:"↺ නැවත උත්සාහ",
+    goodLuck: n => `ජය වේවා, ${n}!`,
+    qOf: (c,t) => `ප්‍රශ්නය ${c} / ${t}`,
+    answered: n => `${n} ක් පිළිතුරු දෙනු ලැබිණ`,
+    next:"ඊළඟ →", seeResults:"ප්‍රතිඵල →",
+    fbCorrect: (l,t) => `✓ නිවැරදිය! පිළිතුර ${l}: ${t}`,
+    fbWrong:   (l,t) => `✗ වැරදිය. නිවැරදි පිළිතුර ${l}: ${t}`,
+    pass:"සුබ පැතුම්!", fail:"නැවත උත්සාහ කරන්න!",
+    passMsg: (pct,n) => `ඔබ ${pct}% ලකුණු ලබා සමත් විය! සමත් වීමට 80% (32/40) අවශ්‍ය ය. ශාබාෂ, ${n}!`,
+    failMsg: (pct,n) => `ඔබ ${pct}% ලකුණු ලබා ඇත. සමත් වීමට 80% (32/40) අවශ්‍ය ය. වැරදි ප්‍රශ්න හදාරා නැවත උත්සාහ කරන්න, ${n}!`,
+  }
+};
+
+// ================================================================
 // APP STATE
 // ================================================================
+let lang = 'en';
 let playerName = "";
 let sessionQuestions = [];
 let currentIndex = 0;
 let answers = [];
 let answered = false;
+
+// ================================================================
+// LANGUAGE SWITCH
+// ================================================================
+function setLang(l) {
+  lang = l;
+  document.getElementById('btnEN').classList.toggle('active', l === 'en');
+  document.getElementById('btnSI').classList.toggle('active', l === 'si');
+  const u = UI[l];
+  document.getElementById('headerTitle').textContent = u.title;
+  document.getElementById('headerSub').textContent   = u.sub;
+  document.getElementById('welcomeH2').textContent   = u.h2;
+  document.getElementById('welcomeP').textContent    = u.p;
+  u.cards.forEach((t,i) => document.getElementById('card'+i).textContent = t);
+  document.getElementById('nameLbl').textContent    = u.nameLbl;
+  document.getElementById('nameInput').placeholder  = u.namePh;
+  document.getElementById('nameError').textContent  = u.nameErr;
+  document.getElementById('startBtn').textContent   = u.startBtn;
+  document.title = u.title;
+  // Reset to welcome if mid-quiz when language changes
+  goHome();
+}
 
 // ================================================================
 // UTILITIES
@@ -1256,24 +1457,25 @@ function showScreen(id) {
 // ================================================================
 function startTest() {
   const input = document.getElementById('nameInput');
-  const err = document.getElementById('nameError');
+  const u = UI[lang];
   const name = input.value.trim();
   if (!name) {
     input.classList.add('error');
-    err.style.display = 'block';
+    document.getElementById('nameError').style.display = 'block';
     input.focus();
     return;
   }
   input.classList.remove('error');
-  err.style.display = 'none';
+  document.getElementById('nameError').style.display = 'none';
 
   playerName = name;
-  sessionQuestions = shuffle(QUESTIONS).slice(0, 40);
+  const bank = lang === 'si' ? QUESTIONS_SI : QUESTIONS;
+  sessionQuestions = shuffle(bank).slice(0, 40);
   currentIndex = 0;
   answers = new Array(40).fill(null);
   answered = false;
 
-  document.getElementById('quizGreeting').textContent = `Good luck, ${playerName}!`;
+  document.getElementById('quizGreeting').textContent = u.goodLuck(playerName);
   showScreen('quizScreen');
   renderQuestion();
 }
@@ -1287,11 +1489,12 @@ function renderQuestion() {
 
   document.getElementById('categoryBadge').textContent = q.category;
   document.getElementById('questionText').textContent = `${currentIndex + 1}. ${q.q}`;
-  document.getElementById('qCounter').textContent = `Question ${currentIndex + 1} / 40`;
+  const u = UI[lang];
+  document.getElementById('qCounter').textContent = u.qOf(currentIndex + 1, 40);
 
   const pct = Math.round((currentIndex / 40) * 100);
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = `${currentIndex} answered`;
+  document.getElementById('progressLabel').textContent = u.answered(currentIndex);
 
   const fb = document.getElementById('feedbackBox');
   fb.className = 'feedback-box';
@@ -1332,18 +1535,19 @@ function selectOption(idx) {
   items[idx].classList.add(idx === q.ans ? 'correct' : 'wrong');
   if (idx !== q.ans) items[q.ans].classList.add('correct');
 
+  const u = UI[lang];
   if (idx === q.ans) {
     fb.className = 'feedback-box correct';
-    fb.textContent = `✓ Correct! The answer is ${labels[q.ans]}: ${q.opts[q.ans]}`;
+    fb.textContent = u.fbCorrect(labels[q.ans], q.opts[q.ans]);
   } else {
     fb.className = 'feedback-box wrong';
-    fb.textContent = `✗ Incorrect. The correct answer is ${labels[q.ans]}: ${q.opts[q.ans]}`;
+    fb.textContent = u.fbWrong(labels[q.ans], q.opts[q.ans]);
   }
   fb.style.display = 'block';
 
   const nextBtn = document.getElementById('nextBtn');
   nextBtn.style.display = 'inline-block';
-  nextBtn.textContent = currentIndex === 39 ? 'See Results →' : 'Next →';
+  nextBtn.textContent = currentIndex === 39 ? u.seeResults : u.next;
 }
 
 // ================================================================
@@ -1368,9 +1572,19 @@ function showResults() {
   const pct = Math.round((correct / 40) * 100);
   const pass = pct >= 80;
 
+  const u = UI[lang];
   document.getElementById('resultIcon').textContent = pass ? '🎉' : '📋';
-  document.getElementById('resultHeading').textContent = pass ? 'Congratulations!' : 'Keep Practising!';
+  document.getElementById('resultHeading').textContent = pass ? u.pass : u.fail;
   document.getElementById('resultName').textContent = playerName;
+  document.getElementById('outOf').textContent = u.outOf;
+  document.getElementById('correctLbl').textContent = u.correctLbl;
+  document.getElementById('wrongLbl').textContent = u.wrongLbl;
+  document.getElementById('thQuestion').textContent = u.thQ;
+  document.getElementById('thYour').textContent = u.thYour;
+  document.getElementById('thCorrect').textContent = u.thCorrect;
+  document.getElementById('backHomeBtn').textContent = u.backHome;
+  document.getElementById('tryAgainBtn').textContent = u.tryAgain;
+  document.getElementById('reviewToggleBtn').textContent = u.showReview;
 
   const circle = document.getElementById('scoreCircle');
   circle.className = 'score-circle ' + (pass ? 'pass' : 'fail');
@@ -1381,13 +1595,8 @@ function showResults() {
   document.getElementById('percentScore').textContent = pct + '%';
 
   const msg = document.getElementById('passMsg');
-  if (pass) {
-    msg.className = 'pass-msg pass';
-    msg.textContent = `You passed with ${pct}%! The minimum passing score is 80% (32/40). You are ready for the real written examination. Good work, ${playerName}!`;
-  } else {
-    msg.className = 'pass-msg fail';
-    msg.textContent = `You scored ${pct}%. The minimum passing score is 80% (32/40). Review the questions you got wrong and try again — you can do it, ${playerName}!`;
-  }
+  msg.className = 'pass-msg ' + (pass ? 'pass' : 'fail');
+  msg.textContent = pass ? u.passMsg(pct, playerName) : u.failMsg(pct, playerName);
 
   // Build review table
   const tbody = document.getElementById('reviewBody');
@@ -1417,10 +1626,8 @@ function showResults() {
 let reviewVisible = false;
 function toggleReview() {
   reviewVisible = !reviewVisible;
-  const table = document.getElementById('reviewTable');
-  const btn = document.querySelector('.review-toggle');
-  table.style.display = reviewVisible ? 'table' : 'none';
-  btn.textContent = (reviewVisible ? '▲ Hide' : '▼ Show') + ' Question Review';
+  document.getElementById('reviewTable').style.display = reviewVisible ? 'table' : 'none';
+  document.getElementById('reviewToggleBtn').textContent = reviewVisible ? UI[lang].hideReview : UI[lang].showReview;
 }
 
 // ================================================================
@@ -1436,11 +1643,12 @@ function goHome() {
 function retakeTest() {
   reviewVisible = false;
   document.getElementById('reviewTable').style.display = 'none';
-  sessionQuestions = shuffle(QUESTIONS).slice(0, 40);
+  const bank = lang === 'si' ? QUESTIONS_SI : QUESTIONS;
+  sessionQuestions = shuffle(bank).slice(0, 40);
   currentIndex = 0;
   answers = new Array(40).fill(null);
   answered = false;
-  document.getElementById('quizGreeting').textContent = `Good luck, ${playerName}!`;
+  document.getElementById('quizGreeting').textContent = UI[lang].goodLuck(playerName);
   showScreen('quizScreen');
   renderQuestion();
 }
