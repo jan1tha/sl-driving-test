@@ -1,38 +1,63 @@
 # Sri Lanka Driving Licence Practice Test 🇱🇰
 
-An interactive web application to help candidates prepare for the **Sri Lanka Department of Motor Traffic (DMT) written driving examination**.
+An interactive bilingual web application to help candidates prepare for the **Sri Lanka Department of Motor Traffic (DMT) written driving examination** — available in **English** and **සිංහල (Sinhala)**.
+
+## Live Demo
+
+**GitHub Pages:** https://jan1tha.github.io/sl-driving-test/
 
 ## Features
 
-- **96-question bank** covering all official exam topics
+- **Bilingual** — full English and Sinhala (සිංහල) support; toggle with the `EN` / `සිං` buttons in the header
+- **Two official question banks** — 96 English questions and 76 Sinhala-medium questions sourced from the official DMT question bank
 - **40 random questions** per session — different every time
-- **Visual signs** — 27 questions display the actual road sign, traffic signal, or road marking as an SVG illustration (including animated flashing lights)
-- **Instant feedback** — see whether you were right and what the correct answer is after each question
+- **Visual signs** — 27 questions display the actual road sign, traffic signal, or road marking as an inline SVG illustration (including animated flashing lights)
+- **Instant feedback** — correct/wrong verdict with the right answer shown after each question
 - **Results & review** — score, pass/fail verdict, and a full question-by-question breakdown at the end
 - **Pass threshold: 80% (32/40)** — same as the real exam
-- Works on desktop and mobile
+- Works on desktop and mobile; no installation or internet connection required after load
 
-## Topics Covered
+## Question Banks
 
-| Topic | Questions |
-|---|---|
-| Traffic Signs | 15 |
-| Road Rules | 11 |
-| Safe Driving | 12 |
-| Traffic Regulations | 10 |
-| Vehicle Maintenance | 8 |
-| Miscellaneous | 8 |
-| Road Markings | 7 |
-| Traffic Lights | 5 |
-| Speed Limits | 5 |
-| Emergency & First Aid | 5 |
-| Pedestrians & Cyclists | 4 |
-| Parking | 3 |
-| Motorway & Expressway | 3 |
+### English — 96 questions
+
+| Topic | Questions | Visual signs |
+|---|---|---|
+| Traffic Signs | 15 | Yes — all 15 |
+| Road Rules | 11 | — |
+| Safe Driving | 12 | — |
+| Traffic Regulations | 10 | — |
+| Vehicle Maintenance | 8 | — |
+| Miscellaneous | 8 | — |
+| Road Markings | 7 | Yes — 6 of 7 |
+| Traffic Lights | 5 | Yes — all 5 (animated) |
+| Speed Limits | 5 | — |
+| Emergency & First Aid | 5 | Yes — railway crossing (animated) |
+| Pedestrians & Cyclists | 4 | — |
+| Parking | 3 | — |
+| Motorway & Expressway | 3 | — |
+
+### සිංහල (Sinhala) — 76 questions
+
+| විෂය | ප්‍රශ්න | දෘශ්‍ය සංඥා |
+|---|---|---|
+| මාර්ග සංඥා | 15 | ඔව් — සියල්ල 15 |
+| රථ වාහන රෙගුලාසි | 10 | — |
+| මාර්ග නීති | 9 | — |
+| ආරක්ෂිත ධාවනය | 7 | — |
+| මාර්ග ලකුණු | 7 | ඔව් — 6 of 7 |
+| රථ ගමනාගමන ආලෝකය | 5 | ඔව් — සියල්ල 5 (animated) |
+| රථ වාහන රෙගුලාසි | 5 | — |
+| රිය නඩත්තු | 5 | — |
+| හදිසි & ප්‍රථමාධාර | 4 | ඔව් — රේල් ගමනාගමන |
+| රිය නතර කිරීම | 3 | — |
+| ද්‍රුතගාමී මාර්ග | 2 | — |
+| පාද ගමනාකරු | 2 | — |
+| විවිධ | 2 | — |
 
 ## Local Usage
 
-No installation or server required — just open the file in a browser:
+No installation or server required — open directly in any browser:
 
 ```bash
 open index.html
@@ -42,7 +67,7 @@ open index.html
 
 ### Prerequisites
 - A [Choreo](https://console.choreo.dev) account
-- This repository pushed to GitHub
+- This repository connected to Choreo
 
 ### Steps
 
@@ -51,7 +76,7 @@ open index.html
 2. **Create a new component**
    - Go to your project → **Components** → **+ Create**
    - Select component type: **Web Application**
-   - Connect your GitHub account and select this repository
+   - Connect your GitHub account and select this repository (`jan1tha/sl-driving-test`)
    - Branch: `main`
 
 3. **Configure the build**
@@ -61,17 +86,16 @@ open index.html
 
 4. **Deploy**
    - Click **Deploy** → **Build & Deploy**
-   - Choreo will build the Docker image, push it, and deploy the app
-   - Once deployed, the public URL is shown in the **Endpoints** tab
+   - Choreo builds the Docker image and deploys it
+   - The public URL appears in the **Endpoints** tab
 
 5. **Access**
-   - Open the public URL from the Choreo Endpoints tab
    - The app is served on port `8080` inside the container; Choreo maps it to HTTPS
 
 ### Architecture
 
 ```
-Browser → Choreo (HTTPS) → nginx container (port 8080) → index.html
+Browser → Choreo / GitHub Pages (HTTPS) → nginx container (port 8080) → index.html
 ```
 
 The entire application is a single `index.html` file served by an nginx:alpine container.
@@ -80,18 +104,21 @@ The entire application is a single `index.html` file served by an nginx:alpine c
 
 ```
 driving-test/
-├── index.html              # The entire application (HTML + CSS + JS)
-├── Dockerfile              # nginx-based container for Choreo
-├── nginx.conf              # nginx server configuration (port 8080)
+├── index.html              # Entire application — HTML + CSS + JS (both language banks)
+├── Dockerfile              # nginx:alpine container for Choreo deployment
+├── nginx.conf              # nginx config (port 8080, gzip, security headers)
 ├── .choreo/
 │   └── component.yaml      # Choreo component schema
-├── CLAUDE.md               # AI assistant context and developer notes
+├── CLAUDE.md               # Developer context and AI assistant notes
 └── README.md               # This file
 ```
 
 ## Contributing / Extending
 
-To add questions, edit the `QUESTIONS` array in `index.html`. See `CLAUDE.md` for detailed instructions on adding questions and new SVG signs.
+All content lives in `index.html`. See `CLAUDE.md` for detailed instructions on:
+- Adding English questions to `QUESTIONS`
+- Adding Sinhala questions to `QUESTIONS_SI`
+- Adding new SVG road signs to `const S`
 
 ## Disclaimer
 

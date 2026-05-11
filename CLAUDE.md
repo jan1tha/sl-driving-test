@@ -1,66 +1,134 @@
 # Sri Lanka Driving Licence Practice Test — Project Context
 
 ## What this is
-A fully self-contained static single-page web app for practising the Sri Lanka Department of Motor Traffic (DMT) written driving licence examination. No framework, no build step, no dependencies — one file: `index.html`.
+A fully self-contained bilingual single-page web app for practising the Sri Lanka Department of Motor Traffic (DMT) written driving licence examination. Supports **English** and **Sinhala (සිංහල)**. No framework, no build step, no dependencies — one file: `index.html`.
 
 ## Tech stack
 - Pure HTML5 / CSS3 / Vanilla JavaScript
-- All SVG road signs and markings are drawn inline (no image assets)
-- Deployed as a containerised static site via nginx on WSO2 Choreo
+- All SVG road signs, traffic lights, and road markings drawn inline (no image assets)
+- Bilingual: English and Sinhala with a header toggle
+- Hosted on GitHub Pages and deployable to WSO2 Choreo via Docker/nginx
 
-## Question bank
-- **96 questions** across 13 categories, randomly shuffled each session
-- **40 questions** selected per session (same as real DMT exam)
-- **Pass threshold: 80% (32/40)** — same as official exam
-- **27 questions** show inline SVG illustrations of the actual sign/signal/marking
+## Question banks
 
-| Category | Count | Has illustrations |
+### English (`const QUESTIONS`) — 96 questions
+| Category | Count | Has SVG illustrations |
 |---|---|---|
-| Traffic Signs | 15 | Yes — all 15 show SVG signs |
+| Traffic Signs | 15 | Yes — all 15 |
 | Road Rules | 11 | — |
 | Safe Driving | 12 | — |
 | Traffic Regulations | 10 | — |
 | Vehicle Maintenance | 8 | — |
 | Miscellaneous | 8 | — |
-| Road Markings | 7 | Yes — 6 of 7 show SVG diagrams |
-| Traffic Lights | 5 | Yes — all 5 show animated SVG lights |
+| Road Markings | 7 | Yes — 6 of 7 |
+| Traffic Lights | 5 | Yes — all 5 (animated) |
 | Speed Limits | 5 | — |
-| Emergency & First Aid | 5 | Yes — railway crossing signal (animated) |
+| Emergency & First Aid | 5 | Yes — railway crossing (animated) |
 | Pedestrians & Cyclists | 4 | — |
 | Parking | 3 | — |
 | Motorway & Expressway | 3 | — |
 
-## Key data structures
-- `const S` — SVG strings keyed by sign name (e.g. `S.noEntry`, `S.ltAmber`)
-- `const QUESTIONS` — array of `{ category, q, img?, opts[], ans }` objects
-- `img` is optional; if present, the SVG is rendered between the question text and answer options
+### Sinhala (`const QUESTIONS_SI`) — 76 questions
+Official DMT Sinhala-medium questions. Same 13 category structure, same SVG references (signs are language-neutral).
 
-## Adding questions
-Add an object to `QUESTIONS` in `index.html`:
+| Category (Sinhala) | Count | Has SVG illustrations |
+|---|---|---|
+| මාර්ග සංඥා | 15 | Yes — all 15 |
+| රථ වාහන රෙගුලාසි | 10 | — |
+| මාර්ග නීති | 9 | — |
+| ආරක්ෂිත ධාවනය | 7 | — |
+| මාර්ග ලකුණු | 7 | Yes — 6 of 7 |
+| රථ ගමනාගමන ආලෝකය | 5 | Yes — all 5 (animated) |
+| වේග සීමා | 5 | — |
+| රිය නඩත්තු | 5 | — |
+| හදිසි & ප්‍රථමාධාර | 4 | Yes — railway crossing |
+| රිය නතර කිරීම | 3 | — |
+| ද්‍රුතගාමී මාර්ග | 2 | — |
+| පාද ගමනාකරු | 2 | — |
+| විවිධ | 2 | — |
+
+## Key data structures
+
+### SVGs
+```js
+const S = { noEntry: `<svg.../>`, ltAmber: `<svg.../>`, mkBroken: `<svg.../>`, ... }
+```
+All signs are stored here. Keys used by both English and Sinhala question banks.
+
+### Question object shape
 ```js
 {
-  category: "Traffic Signs",   // one of the 13 categories
+  category: "Traffic Signs",  // string — English for QUESTIONS, Sinhala for QUESTIONS_SI
   q: "What does this sign mean?",
-  img: S.noEntry,              // optional — reference an S.xxx key or omit
+  img: S.noEntry,             // optional — any S.xxx key; omit for text-only questions
+  opts: ["A", "B", "C", "D"],
+  ans: 1                      // 0-indexed correct option
+}
+```
+
+### Language system
+```js
+const UI = { en: { title, h2, nameLbl, fbCorrect, passMsg, ... },
+             si: { ... } }   // all UI strings in both languages
+let lang = 'en';             // current language; set by setLang('en'|'si')
+```
+`setLang(l)` updates all static DOM text and resets to the welcome screen. The question bank used is chosen at `startTest()` / `retakeTest()` based on `lang`.
+
+### Session flow
+1. User selects language (EN / සිං) → `setLang()`
+2. User enters name → `startTest()` → shuffles correct bank → picks 40
+3. `renderQuestion()` — renders question, optional SVG sign, 4 options
+4. `selectOption(idx)` — locks options, shows feedback
+5. `nextQuestion()` — advances index; on Q40 calls `showResults()`
+6. `showResults()` — computes score, renders review table, pass/fail
+7. `retakeTest()` / `goHome()` — restart or return to welcome
+
+## Adding English questions
+Append to `const QUESTIONS` in `index.html`:
+```js
+{
+  category: "Traffic Signs",
+  q: "What does this sign mean?",
+  img: S.noEntry,              // omit if no sign image needed
   opts: ["Option A", "Option B", "Option C", "Option D"],
-  ans: 1                       // 0-indexed index of the correct option
+  ans: 1
+}
+```
+
+## Adding Sinhala questions
+Append to `const QUESTIONS_SI` in `index.html` — same shape, Sinhala text, same `S.xxx` SVG keys:
+```js
+{
+  category: "මාර්ග සංඥා",
+  q: "මෙම සංඥාව දකින විට?",
+  img: S.noEntry,
+  opts: ["A", "B", "C", "D"],
+  ans: 1
 }
 ```
 
 ## Adding a new SVG sign
-Add an entry to `const S` before `const QUESTIONS`:
+Add to `const S` (before `const QUESTIONS`):
 ```js
 mySign: `<svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">...</svg>`,
 ```
-Then reference `S.mySign` in a question's `img` field.
+Then reference `S.mySign` in any question's `img` field in either bank.
 
-## Deployment — Choreo
-The app runs inside an nginx:alpine container listening on port 8080.
-- `Dockerfile` — builds the container image
-- `nginx.conf` — nginx server block (port 8080, gzip, security headers)
-- `.choreo/component.yaml` — Choreo component schema
+## Deployment
 
-See README.md for step-by-step Choreo deployment instructions.
+### GitHub Pages (live)
+URL: `https://jan1tha.github.io/sl-driving-test/`
+Auto-deploys on every push to `main`. No config needed.
+
+### WSO2 Choreo (Docker)
+The app runs in an nginx:alpine container on port 8080.
+- `Dockerfile` — builds the image
+- `nginx.conf` — port 8080, gzip, security headers, SPA routing
+- `.choreo/component.yaml` — Choreo component schema (`schemaVersion: "1.0"`)
+
+In Choreo: create a **Web Application** component, build pack **Docker**, Dockerfile path `Dockerfile`.
 
 ## Local development
-Just open `index.html` in any browser. No server needed.
+```bash
+open index.html   # no server required
+```
