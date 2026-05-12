@@ -28,24 +28,22 @@ A fully self-contained bilingual single-page web app for practising the Sri Lank
 | Parking | 3 | — |
 | Motorway & Expressway | 3 | — |
 
-### Sinhala (`const QUESTIONS_SI`) — 76 questions
-Official DMT Sinhala-medium questions. Same 13 category structure, same SVG references (signs are language-neutral).
+### Sinhala (`const QUESTIONS_SI`) — 171 questions
+Full official DMT Sinhala-medium question bank (Q1–Q172, Q153 blank/skipped). All 171 questions sourced from the official PDF. Same SVG keys as English bank (signs are language-neutral).
 
 | Category (Sinhala) | Count | Has SVG illustrations |
 |---|---|---|
-| මාර්ග සංඥා | 15 | Yes — all 15 |
-| රථ වාහන රෙගුලාසි | 10 | — |
-| මාර්ග නීති | 9 | — |
-| ආරක්ෂිත ධාවනය | 7 | — |
-| මාර්ග ලකුණු | 7 | Yes — 6 of 7 |
-| රථ ගමනාගමන ආලෝකය | 5 | Yes — all 5 (animated) |
-| වේග සීමා | 5 | — |
-| රිය නඩත්තු | 5 | — |
-| හදිසි & ප්‍රථමාධාර | 4 | Yes — railway crossing |
-| රිය නතර කිරීම | 3 | — |
-| ද්‍රුතගාමී මාර්ග | 2 | — |
-| පාද ගමනාකරු | 2 | — |
-| විවිධ | 2 | — |
+| මාර්ග සංඥා | 50 | Yes — all sign questions |
+| ආරක්ෂිත ධාවනය | 35 | — |
+| රිය නඩත්තු | 25 | — |
+| රථ ගමනාගමන ආලෝකය | 19 | Yes — traffic lights |
+| මාර්ග ලකුණු | 14 | Yes — incl. road diagram |
+| රථ වාහන රෙගුලාසි | 11 | — |
+| රිය නතර කිරීම | 6 | — |
+| හදිසි & ප්‍රථමාධාර | 5 | — |
+| ද්‍රුතගාමී මාර්ග | 4 | — |
+| පාද ගමනාකරු | 1 | — |
+| වේග සීමා | 1 | — |
 
 ## Key data structures
 

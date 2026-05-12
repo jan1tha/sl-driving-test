@@ -9,7 +9,7 @@ An interactive bilingual web application to help candidates prepare for the **Sr
 ## Features
 
 - **Bilingual** — full English and Sinhala (සිංහල) support; toggle with the `EN` / `සිං` buttons in the header
-- **Two official question banks** — 96 English questions and 76 Sinhala-medium questions sourced from the official DMT question bank
+- **Two official question banks** — 96 English questions and 171 Sinhala-medium questions sourced from the official DMT question bank
 - **40 random questions** per session — different every time
 - **Visual signs** — 27 questions display the actual road sign, traffic signal, or road marking as an inline SVG illustration (including animated flashing lights)
 - **Instant feedback** — correct/wrong verdict with the right answer shown after each question
@@ -37,23 +37,23 @@ An interactive bilingual web application to help candidates prepare for the **Sr
 | Parking | 3 | — |
 | Motorway & Expressway | 3 | — |
 
-### සිංහල (Sinhala) — 76 questions
+### සිංහල (Sinhala) — 171 questions
+
+Full official DMT Sinhala question bank (Q1–Q172 from the official PDF, Q153 blank/skipped).
 
 | විෂය | ප්‍රශ්න | දෘශ්‍ය සංඥා |
 |---|---|---|
-| මාර්ග සංඥා | 15 | ඔව් — සියල්ල 15 |
-| රථ වාහන රෙගුලාසි | 10 | — |
-| මාර්ග නීති | 9 | — |
-| ආරක්ෂිත ධාවනය | 7 | — |
-| මාර්ග ලකුණු | 7 | ඔව් — 6 of 7 |
-| රථ ගමනාගමන ආලෝකය | 5 | ඔව් — සියල්ල 5 (animated) |
-| රථ වාහන රෙගුලාසි | 5 | — |
-| රිය නඩත්තු | 5 | — |
-| හදිසි & ප්‍රථමාධාර | 4 | ඔව් — රේල් ගමනාගමන |
-| රිය නතර කිරීම | 3 | — |
-| ද්‍රුතගාමී මාර්ග | 2 | — |
-| පාද ගමනාකරු | 2 | — |
-| විවිධ | 2 | — |
+| මාර්ග සංඥා | 50 | ඔව් — සංඥා ප්‍රශ්න සියල්ල |
+| ආරක්ෂිත ධාවනය | 35 | — |
+| රිය නඩත්තු | 25 | — |
+| රථ ගමනාගමන ආලෝකය | 19 | ඔව් — ආලෝක සංඥා |
+| මාර්ග ලකුණු | 14 | ඔව් — මාර්ග රූප සටහන් |
+| රථ වාහන රෙගුලාසි | 11 | — |
+| රිය නතර කිරීම | 6 | — |
+| හදිසි & ප්‍රථමාධාර | 5 | — |
+| ද්‍රුතගාමී මාර්ග | 4 | — |
+| පාද ගමනාකරු | 1 | — |
+| වේග සීමා | 1 | — |
 
 ## Local Usage
 
